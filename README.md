@@ -3,9 +3,9 @@ A [REST API](https://photo-app.heroku.app)
 with a mySQL-database for storing photos and albums with authentication settings and other validation rules
 
 ## Using
--NodeJS
--mySQL
--JavaScript
+- NodeJS
+- mySQL
+- JavaScript
 
 ## Table of contents
 * [Assignment](#assignment)
@@ -20,20 +20,20 @@ A user should only be able to see their own albums and photos and only be able t
 
 
 ## Specification
-Users
+#### Users
 - registrera nya användare
 
-Foton
+#### Foton
 - lista sina foton
 - skapa ett nytt foto
 - uppdatera ett foto
 
-Album
+#### Album
 - lista sina album
 - skapa nya album
 - uppdatera ett album
 
-Album > Foton
+#### Album > Foton
 - lista foton i ett album
 - lägga till foto i ett album
 
