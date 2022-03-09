@@ -3,7 +3,7 @@ const router = express.Router();
 
 /* GET / */
 router.get('/', (req, res, next) => {
-	res.send({ success: true, data: { msg: 'oh, hi' }});
+	res.send({ success: true, data: { msg: 'look I have deployed my app!' }});
 });
 
 router.get('/test', (req, res, next) => {
