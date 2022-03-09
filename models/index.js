@@ -14,9 +14,12 @@ const knex = require('knex')({
 
 const bookshelf = require('bookshelf')(knex);
 
+//här lägger jag in bopokshelf-modulerna
 const models = {};
 models.Example = require('./Example')(bookshelf);
+models.Users = require('./user_model')(bookshelf);
 
+//här exporterar jag modulerna
 module.exports = {
 	bookshelf,
 	...models,
