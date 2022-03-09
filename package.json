@@ -1,5 +1,5 @@
 {
-  "name": "fed21-nodejs-boilerplate",
+  "name": "Photo-api",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -23,5 +23,9 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "nodemon": "^2.0.15"
+  },
+  "engines": {
+    "node": "16.x"
   }
+
 }
