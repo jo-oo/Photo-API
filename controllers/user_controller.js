@@ -39,6 +39,22 @@ const show = async (req, res) => {
 	});
 }
 
+
+const johannasMetod = async (req, res) => {
+	//exampleId det id som skickas med i requestet example/1
+	//const userId = req.params.exampleId;
+
+	//Gör ett anrop mot databasen hämta en modell av tabellen user
+	// const user = await new models.Users({ id: userId })//använder vårt models-objekt som har metoden users. där kan vi skicka in id.
+	// 	.fetch();
+
+	res.send({ //skickas tillbaka till oss
+		status: 'johannas metod'
+		
+	});
+}
+
+
 /**
  * Register new User
  * //Store a new resource
@@ -137,4 +153,5 @@ module.exports = {
 	store,
 	update,
 	destroy,
+	johannasMetod
 }
