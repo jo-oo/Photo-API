@@ -3,11 +3,11 @@
  */
 
 const debug = require('debug')('Photo-api:user_controller'); //
-const { matchedData, validationResult } = require('express-validator'); //läser in 
+const { matchedData, validationResult } = require('express-validator');  //express-validator - hjälper till att säkerställa så datan är säker, så lösenordet användaren skriver in är trimmat osv, att det är en viss längd mm. KALLAS SANITATION : att den renar datan
 const models = require('../models');
 
 /**
- * Get all users
+ * Get all users - method
  *
  * GET /user
  */ //en metod som gäller om du går direkt på controllern 
@@ -21,9 +21,9 @@ const index = async (req, res) => {
 }
 
 /**
- * Get a specific user
+ * Get a specific user - method
  *
- * GET /:exampleId
+ * GET /:userId
  */
 const show = async (req, res) => {
 	//exampleId det id som skickas med i requestet example/1
@@ -75,9 +75,11 @@ const store = async (req, res) => {
 		const user = await new models.Users(validData).save();
 		debug("Created new example successfully: %O", user);
 
-		res.send({
+		res.status(200).send({ //skickar medd 200-meddalnde när användaren hämtas ut
 			status: 'success',
-			data: user,
+			data: {
+				user,
+			}
 		});
 
 	} catch (error) {
