@@ -28,7 +28,8 @@
  const show = async (req, res) => {
 	 const exampleId = req.params.exampleId;
 	 const example = await new models.PhotoApi({ id: exampleId })
-		 .fetch();
+		.fetch({withRelated: ['author', 'users']});
+		 //.fetch({withRelated: ['photos', 'users']}); //to get more from the user
  
 	 res.send({
 		 status: 'success',
