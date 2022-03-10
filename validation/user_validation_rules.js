@@ -2,7 +2,7 @@
  * Register User Validation Rules
  */
 
- const { body } = require('express-validator');
+ const { body } = require('express-validator'); //express-validator - hjälper till att säkerställa så datan är säker, så lösenordet användaren skriver in är trimmat osv, att det är en viss längd mm. KALLAS SANITATION : att den renar datan
  const models = require('../models');
 
 
@@ -34,19 +34,20 @@ const createUserRules = [
 	body('last_name').exists().isString().isLength({ min: 3 }),
 ];
 
-                /**
-                 * Update User validation rules
-                 *
-                 * Required: -
-                 * Optional: password, first_name, last_name
-                 *///Optional user validation rules for update of user
-                /*
-                const updateUserRules = [
-                    body('password').optional().isString().isLength({ min: 6 }),
-                    body('first_name').optional().isString().isLength({ min: 2 }),
-                    body('last_name').optional().isString().isLength({ min: 2 }),
-                ];
-                */
+/**
+
+* Update User validation rules
+*
+* Required: -
+* Optional: password, first_name, last_name
+*///Optional user validation rules for update of user
+/*
+const updateUserRules = [
+    body('password').optional().isString().isLength({ min: 6 }),
+    body('first_name').optional().isString().isLength({ min: 2 }),
+    body('last_name').optional().isString().isLength({ min: 2 }),
+    ];
+*/               
 
 module.exports = {
 	createUserRules,
