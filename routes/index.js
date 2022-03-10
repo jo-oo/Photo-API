@@ -5,7 +5,7 @@ const router = express.Router();
 
 // index http://localhost:3000/
 router.get('/', (req, res, next) => {
-	res.send({ success: true, data: { msg: 'look I have deployed my app again!' }});
+	res.send({ success: true, data: { msg: 'look I have deployed my app again, and now again!' }});
 });
 
 //router.use('/example', require('./example'));
