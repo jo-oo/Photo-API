@@ -1,6 +1,7 @@
 /**
  * User Controller
  */
+//En controller är en metod som tar emot anrop via en http:request
 
 const debug = require('debug')('Photo-api:user_controller'); //
 const { matchedData, validationResult } = require('express-validator');  //express-validator - hjälper till att säkerställa så datan är säker, så lösenordet användaren skriver in är trimmat osv, att det är en viss längd mm. KALLAS SANITATION : att den renar datan
@@ -76,7 +77,7 @@ const store = async (req, res) => {
 		debug("Created new example successfully: %O", user);
 
 		res.status(200).send({ //skickar medd 200-meddalnde när användaren hämtas ut
-			status: 'success',
+			status: 'success 200 user got back',
 			data: {
 				user,
 			}
