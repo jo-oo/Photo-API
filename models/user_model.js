@@ -3,6 +3,7 @@
 
 module.exports = (bookshelf) => {
 	return bookshelf.model('photo_api', { //photo_api = databasens namn
-		tableName: 'user', // tableName = tabellen user
+		tableName: 'users', // tableName = tabellen user
 	});
 };
+
