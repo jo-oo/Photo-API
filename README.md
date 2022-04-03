@@ -1,4 +1,4 @@
-# Photo-app
+# Photo-API
 A [REST API](https://photo-app.heroku.app)
 with a mySQL-database for storing photos and albums with authentication settings and other validation rules
 
