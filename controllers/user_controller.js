@@ -1,11 +1,69 @@
 /**
- * User Controller
+ * UER CONTROLLER
  */
 //En controller är en metod som tar emot anrop via en http:request
 
+
+//Authentication:
+const bcrypt = require('bcrypt'); //läser in bcrypt som behövs för authentication
+const jwt = require('jsonwebtoken');
+//Other:
 const debug = require('debug')('Photo-api:user_controller'); //
 const { matchedData, validationResult } = require('express-validator');  //express-validator - hjälper till att säkerställa så datan är säker, så lösenordet användaren skriver in är trimmat osv, att det är en viss längd mm. KALLAS SANITATION : att den renar datan
 const models = require('../models');
+
+
+/**
+ * AUTHENTICATION
+ */
+
+
+
+/**
+ * 3. Register new User //Store a new resource
+ *
+ * POST /register  http://localhost:3000/users
+ */
+ const store = async (req, res) => {
+
+	//check for any validation errors WORKS
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(422).send({ status: 'fail', data: errors.array() });
+	}
+
+	// hämta bara den validerade datan från requesten och spara den i "validData"
+	const validData = matchedData(req);
+
+	try {
+		//lösenordshantering: tar lösenordet ur den validerade datan och hashar den och lägger på antal SaltRounds. Sparar det hashade lösenordet i "validData.password"
+		validData.password = await bcrypt.hash(validData.password, models.user_model.hashSaltRounds);
+
+/*
+		const user = await new models.Users(validData).save();
+		debug("Created new example successfully: %O", user);
+
+		res.status(200).send({ //skickar medd 200-meddalnde när användaren hämtas ut
+			status: 'success user created',
+			data: {
+				user,
+			}
+		});
+		*/
+
+	} catch (error) {
+		res.status(500).send({
+			status: 'error',
+			message: 'Exception thrown in database when creating a new user. Hashing password error P',
+		});
+		throw error;
+	}
+}
+
+
+
+
+
 
 
 
@@ -22,6 +80,9 @@ const models = require('../models');
 		data: allUsers,
 	});
 }
+
+
+
 
 
 
@@ -64,41 +125,11 @@ const johannasMetod = async (req, res) => {
 }
 
 
-/**
- * 3. Register new User //Store a new resource
- *
- * POST /register  http://localhost:3000/users
- */
-const store = async (req, res) => {
 
-	//check for any validation errors WORKS
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		return res.status(422).send({ status: 'fail', data: errors.array() });
-	}
 
-	// get only the validated data from the request
-	const validData = matchedData(req);
 
-	try {
-		const user = await new models.Users(validData).save();
-		debug("Created new example successfully: %O", user);
 
-		res.status(200).send({ //skickar medd 200-meddalnde när användaren hämtas ut
-			status: 'success user created',
-			data: {
-				user,
-			}
-		});
 
-	} catch (error) {
-		res.status(500).send({
-			status: 'error',
-			message: 'Exception thrown in database when creating a new example.',
-		});
-		throw error;
-	}
-}
 
 /**
  * Update a specific resource
