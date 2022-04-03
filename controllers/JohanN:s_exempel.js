@@ -1,5 +1,5 @@
 /**
- * user Controller
+ * Example Controller
  */
 
  const debug = require('debug')('books:example_controller');
@@ -25,17 +25,15 @@
   *
   * GET /:exampleId
   */
- const show = async (req, res) => {
-	 const exampleId = req.params.exampleId;
-	 const example = await new models.PhotoApi({ id: exampleId })
-		.fetch({withRelated: ['author', 'users']});
-		 //.fetch({withRelated: ['photos', 'users']}); //to get more from the user
- 
-	 res.send({
-		 status: 'success',
-		 data: example,
-	 });
- }
+  const show = async (req, res) => {
+	const example = await new models.Example({ id: req.params.exampleId })
+		.fetch();
+
+	res.send({
+		status: 'success',
+		data: example,
+	});
+}
  
  /**
   * Store a new resource
