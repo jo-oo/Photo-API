@@ -9,57 +9,44 @@ const models = require('../models');
 
 
 
-/**
- * 1. Get all users - method
+/** 
+ * 1. Get all users - method   WORKS
  *
- * GET /user
+ * GET http://localhost:3000/users
  */ //en metod som gäller om du går direkt på controllern 
  const index = async (req, res) => {
-	//const allUsers = await models.Users.fetchAll();
+	const allUsers = await models.Users.fetchAll();
 
 	res.send({
-		status: 'success från user controllern index',
-		//data: allUsers,
+		status: 'success från user controllern index som returnerar alla users',
+		data: allUsers,
 	});
 }
 
 
- /**
-  * Get a specific resource
-  *
-  * GET /:Id
-  */
-//   const show = async (req, res) => {
-// 	const Id = await new models.PhotoApi({ id: Id }) //get Id
-// 	   .fetch({withRelated: ['author', 'users']});
-// 		//.fetch({withRelated: ['photos', 'users']}); //to get more from the user
 
-// 	res.send({
-// 		status: 'success',
-// 		data: example,
-// 	});
-//}
+/**
+* 2. Get a specific resource
+*
+* GET http://localhost:3000/users/id
+*/
+const showUser = async (req, res) => {
+	const Id = await new models.Users({ id: req.params.Id }).fetch() //get Id
+	  // .fetch({withRelated: ['author', 'users']});
+		//.fetch({withRelated: ['photos', 'users']}); //to get more from the user
+
+	res.send({
+		status: 'success',
+		data: Id,
+	});
+}
+
 
 
 /**
  * Get a specific user - method
  *
- * GET /:userId
- */
-const show = async (req, res) => {
-	//exampleId det id som skickas med i requestet example/1
-	const userId = req.params.Id;
-
-	// //Gör ett anrop mot databasen hämta en modell av tabellen user
-	// const user = await new models.Users({ id: userId })//använder vårt models-objekt som har metoden users. där kan vi skicka in id.
-	// 	.fetch();
-
-	res.send({ //skickas tillbaka till oss
-		status: 'success',
-		id: userId
-		//data: user,
-	});
-}
+ * TEST GET /:userId
 
 
 const johannasMetod = async (req, res) => {
@@ -80,48 +67,43 @@ const johannasMetod = async (req, res) => {
 /**
  * 3. Register new User //Store a new resource
  *
- * POST /register
+ * POST /register  http://localhost:3000/users
  */
 const store = async (req, res) => {
 
+	//check for any validation errors WORKS
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(422).send({ status: 'fail', data: errors.array() });
+	}
 
-    res.status(200).send({
-		status: 'success',
-	});
+	// get only the validated data from the request
+	const validData = matchedData(req);
 
-	// check for any validation errors
-	// const errors = validationResult(req);
-	// if (!errors.isEmpty()) {
-	// 	return res.status(422).send({ status: 'fail', data: errors.array() });
-	// }
+	try {
+		const user = await new models.Users(validData).save();
+		debug("Created new example successfully: %O", user);
 
-	// // get only the validated data from the request
-	// const validData = matchedData(req);
+		res.status(200).send({ //skickar medd 200-meddalnde när användaren hämtas ut
+			status: 'success user created',
+			data: {
+				user,
+			}
+		});
 
-	// try {
-	// 	const user = await new models.Users(validData).save();
-	// 	debug("Created new example successfully: %O", user);
-
-	// 	res.status(200).send({ //skickar medd 200-meddalnde när användaren hämtas ut
-	// 		status: 'success 200 user got back',
-	// 		data: {
-	// 			user,
-	// 		}
-	// 	});
-
-	// } catch (error) {
-	// 	res.status(500).send({
-	// 		status: 'error',
-	// 		message: 'Exception thrown in database when creating a new example.',
-	// 	});
-	// 	throw error;
-	// }
+	} catch (error) {
+		res.status(500).send({
+			status: 'error',
+			message: 'Exception thrown in database when creating a new example.',
+		});
+		throw error;
+	}
 }
 
 /**
  * Update a specific resource
  *
- * PUT /:exampleId
+ * 4. PUT http://localhost:3000/users/id
  */
 const update = async (req, res) => {
 	const exampleId = req.params.exampleId;
@@ -180,9 +162,9 @@ const destroy = (req, res) => {
 //Export methods
 module.exports = {
 	index,
-	show,
+	showUser,
 	store,
 	update,
 	destroy,
-	johannasMetod
+	//johannasMetod,
 }

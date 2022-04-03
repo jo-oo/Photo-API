@@ -13,10 +13,11 @@
  * Optional: -
  */
 const createUserRules = [
+   
 	//checks that the user typed in a email, that it is a string, is a valid email-address, and minimum 5 chars long
     body('email').exists().isString().isEmail().isLength({ min: 3 }).custom(async value => {  
         //function that checks if email already exists in database
-		const email = await new models.User({ email: value }).fetch({ require: false });
+		const email = await new models.Users({ email: value }).fetch({ require: false });
 		
         //if email exists, reject
         if (email) {
@@ -32,6 +33,7 @@ const createUserRules = [
 	body('first_name').exists().isString().isLength({ min: 3 }),
     //checks that the user typed in a last name, that it is a string amd that it is at least 3 characters long
 	body('last_name').exists().isString().isLength({ min: 3 }),
+   
 ];
 
 /**

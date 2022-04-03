@@ -13,15 +13,16 @@ router.get('/', userController.index);
 
 
 /* 2. Get a specific resource = GET Id*/
-//vid anrop till adressen http://localhost:3000/users/Id så körs metoden show som ligger i user_controller-filen
-router.get('/:Id', userController.show); 
+//vid anrop till adressen http://localhost:3000/users/:Id så körs metoden show som ligger i user_controller-filen
+router.get('/:Id', userController.showUser); 
 
 
 
 /* 3. STORE a new resource */
 // Registrera en ny användare 
 //vid anrop till adressen http://localhost:3000/users/ så körs metoden store som ligger i user_controller-filen. Metoden lagrar det son skickats in via en post-request
-router.post('/', userController.store);
+router.post('/', userValidationRules.createUserRules, userController.store);
+
 
 
 
