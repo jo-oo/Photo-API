@@ -1,8 +1,7 @@
 /**
- * UER CONTROLLER
+ * USER CONTROLLER
  */
 //En controller är en metod som tar emot anrop via en http:request
-
 
 //Authentication:
 const bcrypt = require('bcrypt'); //läser in bcrypt som behövs för authentication
@@ -16,7 +15,6 @@ const models = require('../models');
 /**
  * AUTHENTICATION
  */
-
 
 
 /**
@@ -36,36 +34,50 @@ const models = require('../models');
 	const validData = matchedData(req);
 
 	try {
-		//lösenordshantering: tar lösenordet ur den validerade datan och hashar den och lägger på antal SaltRounds. Sparar det hashade lösenordet i "validData.password"
-		validData.password = await bcrypt.hash(validData.password, models.user_model.hashSaltRounds);
+		//lösenordshantering: hashar validData.password och lägger på antal SaltRounds. Sparar det hashade lösenordet i "validData.password"
+		validData.password = await bcrypt.hash(validData.password, 10);
 
-/*
+	} catch (error) {
+		res.status(500).send({
+			status: 'error',
+			message: 'Exception thrown in database when creating a new user. Hashing password error',
+		});	
+	}
+
+	// returnerar ny användare UTAN LÖSENORD och sparar
+	try {
 		const user = await new models.Users(validData).save();
 		debug("Created new example successfully: %O", user);
 
 		res.status(200).send({ //skickar medd 200-meddalnde när användaren hämtas ut
 			status: 'success user created',
 			data: {
-				user,
+				user, //ADD OTHER THINGS HERE!!!!!!!! All data from a user should be returned here except from ID
 			}
 		});
-		*/
 
 	} catch (error) {
 		res.status(500).send({
 			status: 'error',
-			message: 'Exception thrown in database when creating a new user. Hashing password error P',
+			message: 'Exception thrown in database when creating a new user.',
 		});
 		throw error;
 	}
-}
+};
+
+
+
+
+//3.1. = LOGIN
+
+
+//3.2. REFERSH USER
 
 
 
 
 
-
-
+//GET METHODS: EASIER METHODS BUT WILL NOT RETURN VALID DUE TO AUTHENTICATION NOW REQUIRED
 
 /** 
  * 1. Get all users - method   WORKS
@@ -80,10 +92,6 @@ const models = require('../models');
 		data: allUsers,
 	});
 }
-
-
-
-
 
 
 /**
@@ -137,12 +145,12 @@ const johannasMetod = async (req, res) => {
  * 4. PUT http://localhost:3000/users/id
  */
 const update = async (req, res) => {
-	const exampleId = req.params.exampleId;
+	const updateId = req.params.Id;
 
 	// make sure example exists
-	const example = await new models.Example({ id: exampleId }).fetch({ require: false });
-	if (!example) {
-		debug("Example to update was not found. %o", { id: exampleId });
+	const userUpdate = await new models.Users({ id: req.params.Id }).fetch({ require: false });
+	if (!userUpdate) {
+		debug("User to update was not found. %o", { id: req.params.Id });
 		res.status(404).send({
 			status: 'fail',
 			data: 'Example Not Found',
@@ -160,18 +168,18 @@ const update = async (req, res) => {
 	const validData = matchedData(req);
 
 	try {
-		const updatedExample = await example.save(validData);
-		debug("Updated example successfully: %O", updatedExample);
+		const updatedUser = await userUpdate.save(validData);
+		debug("Updated user successfully: %O", updatedUser);
 
 		res.send({
 			status: 'success',
-			data: example,
+			data: userUpdate,
 		});
 
 	} catch (error) {
 		res.status(500).send({
 			status: 'error',
-			message: 'Exception thrown in database when updating a new example.',
+			message: 'Exception thrown in database when updating a new user.',
 		});
 		throw error;
 	}
@@ -194,7 +202,7 @@ const destroy = (req, res) => {
 module.exports = {
 	index,
 	showUser,
-	store,
+	store, //=register
 	update,
 	destroy,
 	//johannasMetod,
