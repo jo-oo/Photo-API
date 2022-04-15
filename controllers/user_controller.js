@@ -34,7 +34,8 @@ const models = require('../models');
 	const validData = matchedData(req);
 
 	try {
-		//lösenordshantering: hashar validData.password och lägger på antal SaltRounds. Sparar det hashade lösenordet i "validData.password"
+		//lösenordshantering: hashar validData.password och lägger på antal SaltRounds. 
+		//Sparar det hashade lösenordet i "validData.password" (som att det skrivs över med ett nytt hashat värde)
 		validData.password = await bcrypt.hash(validData.password, 10);
 
 	} catch (error) {
@@ -42,6 +43,7 @@ const models = require('../models');
 			status: 'error',
 			message: 'Exception thrown in database when creating a new user. Hashing password error',
 		});	
+		throw error;
 	}
 
 	// returnerar ny användare UTAN LÖSENORD och sparar
@@ -66,10 +68,49 @@ const models = require('../models');
 };
 
 
-
-
 //3.1. = LOGIN
+//Logga in en användare via email. Signera en JWT token & returnera den.
 
+const login = async (req, res) => {
+
+	//Destrukuturera email och lösenord från request bodyn
+	const { email, password } = req.body;
+
+	//logga in användaren. Skicka felmeddelande om det misslyckas
+	const user = await models.Users.login(email, password);
+	if (!user) {
+		return res.status(401).send({
+			status: 'fail',
+			data: 'Authorization failed',
+		});
+	}
+
+	//JWT Payload-innehåll:
+	const payload = {
+		sub: user.get('email'),
+		user_id: user.get('id'),
+		name: user.get('first_name') + ' ' + user.get('last_name'),
+	};
+
+	//Signera payloaden & hämta en access-token
+	const access_token = jwt.sign(payload, 'xutld78!&/&J', {
+		expiresIn: process.env.ACCESS_TOKEN_LIFETIME || '10h',
+	});
+
+	//Signera payloaden & hämta refresh-token
+	const refresh_token = jwt.sign(payload, 'xutld78!&/&J', {
+		expiresIn: process.env.REFRESH_TOKEN_LIFETIME || '1w',
+	});
+
+	//Svara med access-token
+	return res.send({
+		status: 'success',
+		data: {
+			access_token,
+			refresh_token,
+		},
+	});
+};
 
 //3.2. REFERSH USER
 
@@ -205,5 +246,6 @@ module.exports = {
 	store, //=register
 	update,
 	destroy,
+	login
 	//johannasMetod,
 }
