@@ -38,4 +38,5 @@ router.get('/student/:Id', (req, res, next) => {
 // lägg till de route filer som också ska finnas med
 //Denna lägger till en ny undermapp/path till localhost:3000 -> localhopst:3000/users
 router.use('/users', require('./users'));
+router.use('/albums', require('./albums'));
 module.exports = router;
