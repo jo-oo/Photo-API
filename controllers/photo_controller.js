@@ -1,21 +1,16 @@
-	// get only the validated data from the request
-	const validData = matchedData(req);
+const { matchedData, validationResult } = require('express-validator');
+const models = require('../models');
 
-	try {
-		const updatedBook = await book.save(validData);
-		debug("Updated book successfully: %O", updatedBook);
+/** 
+ * 1. Get all photos- method
+ *
+ * GET http://localhost:3000/users
+ */ //en metod som gäller om du går direkt på controllern 
+ const getALlPhotos= async (req, res) => {
+	const user = await models.Users.fetchAll();
 
-		res.send({
-			status: 'success',
-			data: {
-				book,
-			},
-		});
-
-	} catch (error) {
-		res.status(500).send({
-			status: 'error',
-			message: 'Exception thrown in database when updating a new book.',
-		});
-		throw error;
-	}
+	res.send({
+		status: 'success från user controllern som returnerar alla users',
+		data: allUsers,
+	});
+}
