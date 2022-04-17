@@ -1,19 +1,63 @@
-//Export methods
+/**
+* Album Controller
+*/
 
+const models = require('../models');
+const { matchedData, validationResult } = require('express-validator');
+
+/*
 const index = async (req, res) => {
 
-	res.send({
-		status: 'index',
 
+	res.status(200).send({
+		status: 'success',
+		data: {
+		
+		},
 	});
+	
 }
+*/
+
+
+
+/* GET all albums */
+//1. GET from url http://localhost:3000/albums
+ const index = async (req, res) => {
+	
+	const user = await models.Users.fetchById(req.user_id, {
+		withRelated: ['albums'],
+	});
+
+	res.status(200).send({
+		status: 'success',
+		data: {
+			album: user.related('albums'),
+		},
+	});
+
+	
+	
+};
 
 const showAlbum = async (req, res) => {
 
-	res.send({
-		status: 'show album',
-
+	 const album = await models.Users.fetchById(req.params.albumId, {
+		withRelated: ['albums'],
 	});
+
+	if(!album){
+		res.status(200).send({
+			status: "no albums found for :" + req.params.albumId,
+		
+		});
+	}
+
+	res.status(200).send({
+		status: req.params.albumId,
+		data: album
+	});
+	
 }
 
 const storeAlbum = async (req, res) => {
@@ -42,6 +86,7 @@ const postAlbum = async (req, res) => {
 }
 module.exports = {
 	index,
+
 	showAlbum,
 	storeAlbum, //=register
 	updateAlbum,
