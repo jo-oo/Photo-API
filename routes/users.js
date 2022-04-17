@@ -11,9 +11,10 @@ const userValidationRules = require('../validation/user_validation_rules');//imp
 //vid anrop till adressen http://localhost:3000/users/ så körs metoden store som ligger i user_controller-filen. Metoden lagrar det son skickats in via en post-request
 router.post('/', userValidationRules.createUserRules,userController.store);
 
+router.post('/login', userController.login);
 
 //säger åt routern att använda validateJwtToken. Routesen som kommer efter här kommer nu kräva authentication
-router.use(auth.validateJwtToken);
+//router.use(auth.validateJwtToken);
 
 
 /*** GET METHODS ***/
