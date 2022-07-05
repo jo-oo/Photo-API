@@ -24,7 +24,7 @@ router.post('/', photoValidationRules.createPhotoRules, photoController.createPh
 
 /* 4. UPDATE  Uppdatera ett foto */
 //vid anrop till adressen http://localhost:3000/photos/:photoId så körs metoden PUT som ligger i photo_controller-filen. Metoden lagrar det som skickats in via en PUT-request
-//router.put('/:albumId', albumValidationRules.updateRules, photoController.updatePhoto);
+router.put('/:photoId', photoValidationRules.updatePhotoRules, photoController.updatePhoto);
 
 
 

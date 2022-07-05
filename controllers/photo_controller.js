@@ -1,11 +1,13 @@
 const { matchedData, validationResult } = require('express-validator');
+const debug = require('debug')('controllers:photo_controller');
 const models = require('../models');
+
 
 /** 
  * 1. Get all photos- method
  *
  * GET http://localhost:3000/photos
- */ //
+ */ 
  const getAllPhotos = async (req, res) => {	
     //get users photos
 	const user = await models.User.fetchById(req.user.user_id, { withRelated: ['photos'] });
@@ -18,11 +20,10 @@ const models = require('../models');
 }
 
 /** 
- * 1. Get photo by ID - method
+ * 2. Get photo by ID - method
  *
  * GET http://localhost:3000/photos/:photoId
- */ //
-
+ */
 const getPhotoById = async (req, res) => {
     //get users photos
     const user = await models.User.fetchById(req.user.user_id, { withRelated: ['photos'] });
@@ -94,7 +95,79 @@ const createPhoto = async (req, res) => {
     }
 
 }
-const updatePhoto = async (req, res) => {}
+
+
+
+/** 
+ * 3. Update photo by ID - method
+ *
+ * PUT http://localhost:3000/photos/:photoId
+ */
+const updatePhoto = async (req, res) => {
+  //get users photos
+  const user = await models.User.fetchById(req.user.user_id, { withRelated: ['photos'] });
+  
+  //get photo by id
+  const usersPhoto = user.related('photos').find(photo => photo.id == req.params.photoId);
+
+  //check if photo exists
+  if (!usersPhoto) {
+    //debug('Photo to update was not found. %o', { id: req.params.photoId });
+    res.status(404).send({
+        status: 'fail',
+        data: 'Photo Not Found' + req.params.photoId,
+    });
+    return;
+  }
+
+  //check that the photo belongs to the user, otherwise: reject the request
+  if (!usersPhoto) {
+   /*
+    debug('Cannot update due to photo belongs to another user. %o', {
+        id: req.params.photoId,
+    });
+    */
+    return res.status(403).send({
+        status: 'fail',
+        data: 'Action denied. Try something that belongs to you!',
+    });
+   }
+    
+   //check for validation errors first
+	const errors = validationResult(req);
+
+    //if errors, show them
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            status: 'fail',
+            data: errors.array()
+        });
+    }
+
+    // Get the request data after it has gone through the validation
+    const validData = matchedData(req);
+
+	try {
+		const updatedPhoto = await usersPhoto.save(validData);
+		debug('Updated photo successfully: %O', updatedPhoto);
+
+		res.send({
+			status: 'success',
+			data: updatedPhoto,
+		});
+	} catch (error) {
+		res.status(500).send({
+			status: 'error',
+			message: 'Exception thrown in database when updating a new photo.',
+		});
+		throw error;
+	}
+}
+
+
+
+
+
 //Export methods
 module.exports = {
 	getAllPhotos,
