@@ -51,8 +51,10 @@ const getPhotoById = async (req, res) => {
 
 
 const createPhoto = async (req, res) => {
-
+    //check for validation errors first
 	const errors = validationResult(req);
+
+    //if errors, show them
     if (!errors.isEmpty()) {
         return res.status(400).send({
             status: 'fail',
@@ -62,12 +64,12 @@ const createPhoto = async (req, res) => {
 
     // Get the request data after it has gone through the validation
     const validData = matchedData(req);
+
     // Apply the users id to the validated data, to be used when creating new photo
-	
     validData.user_id = req.user.user_id;
 	
     try {
-        //sparar ett objekt till databasen 
+        //saves a object to the database
         const newPhoto = await new models.Photo(validData).save();
 
         // Inform the user that the photo was created

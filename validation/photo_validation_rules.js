@@ -13,9 +13,9 @@
 const createPhotoRules = [
    
 	//checks that the user typed in a title, that it is a string, and minimum 3 chars long
-    body('PhotoTitle').exists().isString().isLength({ min: 3 }).custom(async value => {  
+    body('title').exists().isString().isLength({ min: 3 }).custom(async value => {  
         //function that checks if title already exists in database of that User
-        const PhotoTitle = await new models.Photo({ PhotoTitle: value }).fetch({ require: false }); //refers to the model Photo
+        const PhotoTitle = await new models.Photo({ title: value }).fetch({ require: false }); //refers to the model Photo
         
         //if Photo exists, reject
         if (PhotoTitle) {

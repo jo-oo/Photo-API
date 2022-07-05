@@ -17,7 +17,7 @@ router.get('/', photoController.getAllPhotos);
 router.get('/:photoId', photoController.getPhotoById); 
 
 
-/* 3. STORE Spara ett nytt foto */
+/* 3. POST Spara ett nytt foto */
 //vid anrop till adressen http://localhost:3000/photos/ så körs metoden STORE som ligger i photo_controller-filen. Metoden lagrar det som skickats in via en POST-request
 router.post('/', photoValidationRules.createPhotoRules, photoController.createPhoto);
 
