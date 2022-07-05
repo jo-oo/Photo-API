@@ -4,20 +4,50 @@ const models = require('../models');
 /** 
  * 1. Get all photos- method
  *
- * GET http://localhost:3000/users
- */ //en metod som gäller om du går direkt på controllern 
- const getAllPhotos = async (req, res) => {
-	//const user = await models.User.fetchbyId();
-	
-
+ * GET http://localhost:3000/photos
+ */ //
+ const getAllPhotos = async (req, res) => {	
+    //get users photos
 	const user = await models.User.fetchById(req.user.user_id, { withRelated: ['photos'] });
 	res.send({
 		status: 'Detta är dina bilder:',
-		data: user,			
+		data: {
+			photo: user.related('photos'), //only gets the photos-array
+		},
 	});
 }
 
-const getPhotoById = async (req, res) => {}
+/** 
+ * 1. Get photo by ID - method
+ *
+ * GET http://localhost:3000/photos/:photoId
+ */ //
+
+const getPhotoById = async (req, res) => {
+    //get users photos
+    const user = await models.User.fetchById(req.user.user_id, { withRelated: ['photos'] });
+	//gets the photos-array from user and uses find method over that photos-array to find specific id
+    //Get your specific photo by typing ex: /1 in the route (for photo with id 1)
+    const usersPhoto = user.related('photos').find(photo => photo.id == req.params.photoId);
+
+    //if fail
+    if (!usersPhoto) {
+		return res.status(404).send({
+			status: 'failed to get photo by id /' + req.params.photoId,
+			message: 'Photo with this id was not found',
+		});
+	}
+
+    //if request suceeded, send this back to the user: 
+	res.status(200).send({
+		status: 'success',
+		data: {
+			photo: usersPhoto,
+		},
+	});
+
+}
+
 
 
 const createPhoto = async (req, res) => {
@@ -37,7 +67,7 @@ const createPhoto = async (req, res) => {
     validData.user_id = req.user.user_id;
 	
     try {
-        // Models .Photo(model).save() sparar ettobjekt till databasen 
+        //sparar ett objekt till databasen 
         const newPhoto = await new models.Photo(validData).save();
 
         // Inform the user that the photo was created

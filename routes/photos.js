@@ -14,7 +14,7 @@ router.get('/', photoController.getAllPhotos);
 
 /* 2. GET Photo Id*/
 //vid anrop till adressen http://localhost:3000/photos/:photoId så körs metoden show som ligger i photo_controller-filen
-//router.get('/:albumId', photoController.showPhoto); 
+router.get('/:photoId', photoController.getPhotoById); 
 
 
 /* 3. STORE Spara ett nytt foto */
