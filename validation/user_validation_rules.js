@@ -17,7 +17,7 @@ const createUserRules = [
 	//checks that the user typed in a email, that it is a string, is a valid email-address, and minimum 5 chars long
     body('email').exists().isString().isEmail().isLength({ min: 3 }).custom(async value => {  
         //function that checks if email already exists in database
-		const email = await new models.Users({ email: value }).fetch({ require: false });
+		const email = await new models.User({ email: value }).fetch({ require: false }); //använder User-modellen
 		
         //if email exists, reject
         if (email) {
