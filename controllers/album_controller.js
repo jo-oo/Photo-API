@@ -25,7 +25,7 @@ const index = async (req, res) => {
 //1. GET from url http://localhost:3000/albums
  const index = async (req, res) => {
 	
-	const user = await models.Users.fetchById(req.user_id, {
+	const user = await models.User.fetchById(req.user_id, {
 		withRelated: ['albums'],
 	});
 
@@ -42,7 +42,7 @@ const index = async (req, res) => {
 
 const showAlbum = async (req, res) => {
 
-	 const album = await models.Users.fetchById(req.params.albumId, {
+	 const album = await models.User.fetchById(req.params.albumId, {
 		withRelated: ['albums'],
 	});
 
@@ -86,7 +86,6 @@ const postAlbum = async (req, res) => {
 }
 module.exports = {
 	index,
-
 	showAlbum,
 	storeAlbum, //=register
 	updateAlbum,

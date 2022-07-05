@@ -1,20 +1,25 @@
 
+/**
+ * User model. A model/ mirror of the database table User.
+ * Declares it´s relations to other tables, the way it´s set up in the database. 
+ * Bookshelf holds these models and how they look, in our code
+*/
+
 //Bookshelf-Modell som returnerar databasens namn och tabellen user
 const bcrypt = require('bcrypt');
 
+//Exports the "users"" table, creates a model called "User"
 module.exports = (bookshelf) => {
 	return bookshelf.model(
-		'User', { //bookshelf skapar en model av tabellen Users (modellen kallas User)
-		tableName: 'Users', // tableName = tabellen Users
-		photos() {// deklarera vilken relation User har till Photo i det här fallet har en User flera Photo
+		'User', { //bookshelf skapar en modell av tabellen users (modellen kallas User)
+		tableName: 'users', // tableName = tabellen users
+		photos() {// deklarera vilken relation User har till photos i det här fallet har en User flera Photo
 			return this.hasMany('Photo');
 		},
-		tableName: 'Users',
-	
-		albums() {
+		tableName: 'users',
+		albums() { // deklarera vilken relation User har till photos i det här fallet har en User flera Album
 			return this.hasMany('Album');
 		},
-		
 	},
 	{
 		async login(email, password) {
@@ -30,15 +35,14 @@ module.exports = (bookshelf) => {
 			if (!result) {
 				return false;
 			}
-
 			return user;
 		},
 
 		// fetchOptions sätts som default till ett tomt objekt 
+		//hämtar en specifik användare med dess realtion
 		async fetchById(id, fetchOptions = {}) {
 			return await new this({ id }).fetch(fetchOptions);
 		},
-	}
-	);
+	});
 };
 
