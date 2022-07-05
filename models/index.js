@@ -1,4 +1,4 @@
-// Setting up the database connection
+// Setting up the database connection using knex
 const knex = require('knex')({
 	debug: true,
 	client: 'mysql',
@@ -6,8 +6,8 @@ const knex = require('knex')({
 		host: process.env.DB_HOST || 'localhost',
 		port: process.env.DB_PORT || 3306,
 		charset: process.env.DB_CHARSET || 'utf8mb4',
-		database: process.env.DB_NAME || 'boilerplate',
-		user: process.env.DB_USER || 'boilerplate',
+		database: process.env.DB_NAME || 'Photo-API',
+		user: process.env.DB_USER || 'root',
 		password: process.env.DB_PASSWORD || '',
 	}
 });
@@ -16,11 +16,11 @@ const bookshelf = require('bookshelf')(knex);
 
 //här lägger jag in bopokshelf-modulerna
 const models = {};
-models.Example = require('./Example')(bookshelf);
-models.Users = require('./user_model')(bookshelf);
-models.Albums = require('./album_model')(bookshelf);
+models.Photo = require('./photo_model')(bookshelf);
+models.User = require('./user_model')(bookshelf);
+models.Album = require('./album_model')(bookshelf);
 
-//här exporterar jag modulerna
+//Export modules
 module.exports = {
 	bookshelf,
 	...models,
