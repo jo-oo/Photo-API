@@ -5,60 +5,66 @@
 const models = require('../models');
 const { matchedData, validationResult } = require('express-validator');
 
-/*
-const index = async (req, res) => {
-
-
+/** 
+ * 1. Get all albums- method
+ *
+ * GET http://localhost:3000/albums
+ */ 
+ const getAllAlbums = async (req, res) => {	
+    //get users albums
+	const user = await models.User.fetchById(req.user.user_id, { withRelated: ['albums'] });
 	res.status(200).send({
-		status: 'success',
+		status: 'Detta är dina album:',
 		data: {
-		
+			album: user.related('albums'), //only gets the albums-array
 		},
 	});
-	
 }
-*/
 
+/** 
+ * 1. Get specific album- method
+ *
+ * GET http://localhost:3000/albums/albumId
+ */ 
 
-
-/* GET all albums */
-//1. GET from url http://localhost:3000/albums
- const index = async (req, res) => {
-	
-	const user = await models.User.fetchById(req.user_id, {
-		withRelated: ['albums'],
-	});
-
-	res.status(200).send({
-		status: 'success',
-		data: {
-			album: user.related('albums'),
-		},
-	});
-
-	
-	
-};
 
 const showAlbum = async (req, res) => {
-
-	 const album = await models.User.fetchById(req.params.albumId, {
-		withRelated: ['albums'],
-	});
-
-	if(!album){
-		res.status(200).send({
-			status: "no albums found for :" + req.params.albumId,
+ 	//get users albums
+ 	const user = await models.User.fetchById(req.user.user_id, { withRelated: ['albums'] });
+	
+	//gets the albums-array from user and uses find method over that array to find specific id
+    const usersAlbum = user.related('albums').find(album => album.id == req.params.albumId);
 		
-		});
-	}
+		//if not found the users album
+		if(!usersAlbum){
+			res.status(404).send({
+				status: "no albums found for :" + req.params.albumId,
+				message: 'Photo with this id was not found',
+			});
+		}
 
-	res.status(200).send({
-		status: req.params.albumId,
-		data: album
-	});
+   	 	//if request suceeded, send this back to the user: 
+		res.status(200).send({
+			status: 'success' + req.params.albumId,
+			data: {
+				album: usersAlbum,
+			},
+		});
 	
 }
+
+
+   
+    
+
+
+
+
+
+
+
+
+
 
 const storeAlbum = async (req, res) => {
 
@@ -85,7 +91,7 @@ const postAlbum = async (req, res) => {
 	});
 }
 module.exports = {
-	index,
+	getAllAlbums,
 	showAlbum,
 	storeAlbum, //=register
 	updateAlbum,

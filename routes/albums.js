@@ -8,7 +8,7 @@ const albumValidationRules = require('../validation/album_validation_rules');//i
 
 /* GET all albums */
 //1. GET from url http://localhost:3000/albums (albums-pathen sätter vi i slutet av index-filen)
-router.get('/', albumController.index);
+router.get('/', albumController.getAllAlbums);
 
 
 /* 2. GET Id*/
