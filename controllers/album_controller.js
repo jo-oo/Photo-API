@@ -26,8 +26,6 @@ const { matchedData, validationResult } = require('express-validator');
  *
  * GET http://localhost:3000/albums/albumId
  */ 
-
-
 const showAlbum = async (req, res) => {
  	//get users albums
  	const user = await models.User.fetchById(req.user.user_id, { withRelated: ['albums'] });
@@ -49,30 +47,62 @@ const showAlbum = async (req, res) => {
 			data: {
 				album: usersAlbum,
 			},
-		});
-	
+		});	
 }
 
-
+/** 
+ * 1. Store a new album- method
+ *
+ * POST http://localhost:3000/albums
+ */ 
    
-    
+ const createAlbum = async (req, res) => {
+    //check for validation errors first
+	const errors = validationResult(req);
 
+    //if errors, show them
+    if (!errors.isEmpty()) {
+        return res.status(400).send({
+            status: 'fail',
+            data: errors.array()
+        });
+    }
 
+    // Get the request data after it has gone through the validation
+    const validData = matchedData(req);
 
+    // Apply the users id to the validated data, to be used when creating new photo
+    validData.user_id = req.user.user_id;
+	
+    try {
+        //saves a object to the database
+        const newAlbum = await new models.Album(validData).save();
 
+        // Inform the user that the album was created
+        res.status(201).send({
+            status: 'success',
+            data: {
+                "title": validData.title,
+                "url": validData.url,
+                "comment": validData.comment,
+                "user_id": validData.user_id,
+                "id": newAlbum.id
+            }
+        })
 
+    } catch (error) {
+        // Throw an error if creating an album failed
+        res.status(500).send({
+            status: 'Error',
+            message: 'Issues when creating a new album'
+        });
+        throw error;
+    }
 
-
-
-
-
-const storeAlbum = async (req, res) => {
-
-	res.send({
-		status: 'store album',
-
-	});
 }
+
+
+
 
 
 const updateAlbum = async (req, res) => {
@@ -93,7 +123,8 @@ const postAlbum = async (req, res) => {
 module.exports = {
 	getAllAlbums,
 	showAlbum,
-	storeAlbum, //=register
+	createAlbum,
+
 	updateAlbum,
 	postAlbum
 }

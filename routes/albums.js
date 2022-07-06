@@ -18,7 +18,7 @@ router.get('/:albumId', albumController.showAlbum);
 
 /* 3. STORE Spara ett nytt album */
 //vid anrop till adressen http://localhost:3000/albums/ så körs metoden STORE som ligger i album_controller-filen. Metoden lagrar det som skickats in via en POST-request
-router.post('/', albumValidationRules.createAlbumRules, albumController.storeAlbum);
+router.post('/', albumValidationRules.createAlbumRules, albumController.createAlbum);
 
 
 /* 4. UPDATE  Uppdatera ett album */

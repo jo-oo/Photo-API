@@ -13,12 +13,12 @@
 const createAlbumRules = [
    
 	//checks that the user typed in a title, that it is a string, and minimum 3 chars long
-    body('AlbumTitle').exists().isString().isLength({ min: 3 }).custom(async value => {  
+    body('title').exists().isString().isLength({ min: 3 }).custom(async value => {  
         //function that checks if title already exists in database of that User
-		const AlbumTitle = await new models.Album({ AlbumTitle: value }).fetch({ require: false }); //refers to the model Album
+		const title = await new models.Album({ title: value }).fetch({ require: false }); //refers to the model Album
 		
         //if Album exists, reject
-        if (AlbumTitle) {
+        if (title) {
 			return Promise.reject("This Album already exists.");
 		}
 
@@ -35,7 +35,7 @@ const createAlbumRules = [
 * Update Album validation rules
 */
 const updateAlbumRules = [
-    body('AlbumTitle').exists().isString().isLength({ min: 3 }),
+    body('title').exists().isString().isLength({ min: 3 }),
 ];
 
 
