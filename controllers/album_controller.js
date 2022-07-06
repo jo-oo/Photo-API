@@ -3,6 +3,7 @@
 */
 
 const models = require('../models');
+const debug = require('debug')('controllers:album_controller');
 const { matchedData, validationResult } = require('express-validator');
 
 /** 
@@ -98,20 +99,83 @@ const showAlbum = async (req, res) => {
         });
         throw error;
     }
-
 }
 
 
 
+/** 
+ * 3. Update album by ID - method
+ *
+ * PUT http://localhost:3000/albums/:albumId
+ */
+ const updateAlbum = async (req, res) => {
+	//get users albums
+	const user = await models.User.fetchById(req.user.user_id, { withRelated: ['albums'] });
+	
+	//get album by id
+	const usersAlbum = user.related('albums').find(album => album.id == req.params.albumId);
+  
+	//check if album exists
+	if (!usersAlbum) {
+	  //debug('Album to update was not found. %o', { id: req.params.albumId });
+	  res.status(404).send({
+		  status: 'fail',
+		  data: 'Album Not Found' + req.params.albumId,
+	  });
+	  return;
+	}
+  
+	//check that the album belongs to the user, otherwise: reject the request
+	if (!usersAlbum) {
+	 /*
+	  debug('Cannot update due to album belongs to another user. %o', {
+		  id: req.params.albumId,
+	  });
+	  */
+	  return res.status(403).send({
+		  status: 'fail',
+		  data: 'This album is not yours!',
+	  });
+	 }
+	  
+	 //check for validation errors first
+	  const errors = validationResult(req);
+  
+	  //if errors, show them
+	  if (!errors.isEmpty()) {
+		  return res.status(400).send({
+			  status: 'fail',
+			  data: errors.array()
+		  });
+	  }
+  
+	  // Get the request data after it has gone through the validation
+	  const validData = matchedData(req);
+  
+	  try {
+		  const updatedAlbum = await usersAlbum.save(validData);
+		  debug('Updated photo successfully: %O', updatedAlbum);
+  
+		  res.send({
+			  status: 'success',
+			  data: updatedAlbum,
+		  });
+	  } catch (error) {
+		  res.status(500).send({
+			  status: 'error',
+			  message: 'Exception thrown in database when updating a new album.',
+		  });
+		  throw error;
+	  }
+  }
+  
 
 
-const updateAlbum = async (req, res) => {
 
-	res.send({
-		status: 'update album',
 
-	});
-}
+
+
+
 
 const postAlbum = async (req, res) => {
 
