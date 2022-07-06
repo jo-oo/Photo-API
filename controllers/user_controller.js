@@ -7,23 +7,25 @@
 const bcrypt = require('bcrypt'); //läser in bcrypt som behövs för authentication
 const jwt = require('jsonwebtoken');
 //Other:
-const debug = require('debug')('Photo-api:user_controller'); //
+const debug = require('debug')('Photo-api:user_controller'); //RÄTT?????
 const { matchedData, validationResult } = require('express-validator');  //express-validator - hjälper till att säkerställa så datan är säker, så lösenordet användaren skriver in är trimmat osv, att det är en viss längd mm. KALLAS SANITATION : att den renar datan
 const models = require('../models');
 
 
 /**
- * AUTHENTICATION
+ * AUTHORIZATION
  */
 
 
 /**
  * 3. Register new User //Store a new resource
  *
- * POST /register  http://localhost:3000/users
+ * POST /register  http://localhost:3000/register
  */
  const store = async (req, res) => {
 
+	//return res.status(200).send({ status: 'ok' });
+	
 	//check for any validation errors WORKS
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
@@ -48,13 +50,15 @@ const models = require('../models');
 
 	// returnerar ny användare UTAN LÖSENORD och sparar
 	try {
-		const user = await new models.Users(validData).save();
+		const user = await new models.User(validData).save();
 		debug("Created new example successfully: %O", user);
 
 		res.status(200).send({ //skickar medd 200-meddalnde när användaren hämtas ut
 			status: 'success user created',
 			data: {
-				user, //ADD OTHER THINGS HERE!!!!!!!! All data from a user should be returned here except from ID
+				email: validData.email,
+				first_name: validData.first_name,
+				last_name: validData.last_name, //All data from a user should be returned here except from ID
 			}
 		});
 
@@ -77,7 +81,7 @@ const login = async (req, res) => {
 	const { email, password } = req.body;
 
 	//logga in användaren. Skicka felmeddelande om det misslyckas
-	const user = await models.Users.login(email, password);
+	const user = await models.User.login(email, password);
 	if (!user) {
 		return res.status(401).send({
 			status: 'fail',
@@ -126,7 +130,7 @@ const login = async (req, res) => {
  * GET http://localhost:3000/users
  */ //en metod som gäller om du går direkt på controllern 
  const index = async (req, res) => {
-	const allUsers = await models.Users.fetchAll();
+	const allUsers = await models.User.fetchAll();
 
 	res.send({
 		status: 'success från user controllern index som returnerar alla users',
@@ -141,7 +145,7 @@ const login = async (req, res) => {
 * GET http://localhost:3000/users/id
 */
 const showUser = async (req, res) => {
-	const Id = await new models.Users({ id: req.params.Id }).fetch() //get Id
+	const Id = await new models.User({ id: req.params.Id }).fetch() //get Id
 	  // .fetch({withRelated: ['author', 'users']});
 		//.fetch({withRelated: ['photos', 'users']}); //to get more from the user
 
@@ -189,7 +193,7 @@ const update = async (req, res) => {
 	const updateId = req.params.Id;
 
 	// make sure example exists
-	const userUpdate = await new models.Users({ id: req.params.Id }).fetch({ require: false });
+	const userUpdate = await new models.User({ id: req.params.Id }).fetch({ require: false });
 	if (!userUpdate) {
 		debug("User to update was not found. %o", { id: req.params.Id });
 		res.status(404).send({

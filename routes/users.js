@@ -15,7 +15,7 @@ router.post('/', userValidationRules.createUserRules,userController.store);
 router.post('/login', userController.login);
 
 //säger åt routern att använda validateJwtToken. Routesen som kommer efter här kommer nu kräva authentication
-router.use(auth.validateJwtToken);
+//router.use(auth.validateJwtToken);
 
 
 /*** GET METHODS ***/
