@@ -23,7 +23,7 @@ const { matchedData, validationResult } = require('express-validator');
 }
 
 /** 
- * 1. Get specific album- method
+ * 2. Get specific album- method
  *
  * GET http://localhost:3000/albums/albumId
  */ 
@@ -52,7 +52,7 @@ const showAlbum = async (req, res) => {
 }
 
 /** 
- * 1. Store a new album- method
+ * 3. Store a new album- method
  *
  * POST http://localhost:3000/albums
  */ 
@@ -104,7 +104,7 @@ const showAlbum = async (req, res) => {
 
 
 /** 
- * 3. Update album by ID - method
+ * 4. Update album by ID - method
  *
  * PUT http://localhost:3000/albums/:albumId
  */
@@ -168,27 +168,61 @@ const showAlbum = async (req, res) => {
 		  throw error;
 	  }
   }
+
+
+/** 
+ * 5. POstjjjj album by ID - method
+ *
+ * POST http://localhost:3000/albums/:albumId
+ */
+
+/** 
+ * 6. Delete album by ID - method
+ *
+ * DELETE http://localhost:3000/albums/:albumId
+ */
+ const deleteAlbum = async (req, res) => {
+	//get users albums
+	const user = await models.User.fetchById(req.user.user_id, { withRelated: ['albums'] });
+	
+	//get album by id
+	const usersAlbum = user.related('albums').find(album => album.id == req.params.albumId);
+
+
+	//check if album exists
+	if (!usersAlbum) {
+	  //debug('Album to update was not found. %o', { id: req.params.albumId });
+	  res.status(404).send({
+		  status: 'fail',
+		  data: 'Album not found' + req.params.albumId,
+	  });
+	  return;
+	}
   
+	  try {
+		  const deletedAlbum = await usersAlbum.destroy();
+		  debug('Deleted album successfully: %O', deletedAlbum);
+  
+		  res.status(200).send({
+			  status: 'success',
+			  data: null,
+		  });
+	  } catch (error) {
+		  res.status(500).send({
+			  status: 'error',
+			  message: 'Exception thrown in database when deleting album.',
+		  });
+		  throw error;
+	  }
+  }
 
 
 
 
-
-
-
-
-const postAlbum = async (req, res) => {
-
-	res.send({
-		status: 'post album',
-
-	});
-}
 module.exports = {
 	getAllAlbums,
 	showAlbum,
 	createAlbum,
-
 	updateAlbum,
-	postAlbum
+	deleteAlbum
 }

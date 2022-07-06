@@ -60,8 +60,14 @@ const addPhotoToAlbumRules = [
 ];
 
 
+
+
+
+
+
 module.exports = {
 	createAlbumRules,
     updateAlbumRules,
-    addPhotoToAlbumRules
+    addPhotoToAlbumRules,
+
 };
