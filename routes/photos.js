@@ -26,6 +26,8 @@ router.post('/', photoValidationRules.createPhotoRules, photoController.createPh
 //vid anrop till adressen http://localhost:3000/photos/:photoId så körs metoden PUT som ligger i photo_controller-filen. Metoden lagrar det som skickats in via en PUT-request
 router.put('/:photoId', photoValidationRules.updatePhotoRules, photoController.updatePhoto);
 
-
+/* 6. DELETE Radera ett foto*/
+//vid anrop till adressen http://localhost:3000/photos/:photoId så körs metoden DELETE som ligger i photo_controller-filen. Metoden lagrar det som skickats in via en DELETE-request
+router.delete('/:photoId', photoController.deletePhoto);
 
 module.exports = router; //exporterar router-modulen
