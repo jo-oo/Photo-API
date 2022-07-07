@@ -187,6 +187,7 @@ const updatePhoto = async (req, res) => {
 	}
   
 	  try {
+          const detachAlbum = await usersPhoto.albums().detach();
 		  const deletedPhoto = await usersPhoto.destroy();
 		  debug('Deleted photo successfully: %O', deletedPhoto);
   
