@@ -171,10 +171,85 @@ const showAlbum = async (req, res) => {
 
 
 /** 
- * 5. POstjjjj album by ID - method
+ * 5. POST Add photo to an existing album - method
  *
- * POST http://localhost:3000/albums/:albumId
+ * POST http://localhost:3000//albums/:albumId/photos
  */
+ const addPhotoToAlbum = async (req, res) => {
+	
+	///check for validation errors first
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(422).send({ status: 'fail', data: errors.array() });
+	}
+
+	// Get the request data after it has gone through the validation and save it in ValidData
+	const validData = matchedData(req);
+	
+	// Get user and it´s relation to both albums & photos
+	const user = await models.User.fetchById(req.user.user_id,{ withRelated: ['albums', 'photos'] });
+
+	// Get albums with related photos
+	const album = await models.Album.fetchById(req.params.albumId, { withRelated: ['photos'] });
+
+	// Get the requested album by id
+	const usersAlbum = user.related('albums').find(album => album.id == req.params.albumId);
+
+	// Get only photos belonging to the user
+	const usersPhoto = user.related('photos').find(photo => photo.id == validData.photo_id);
+
+	// Check if photo already exists in album
+	const existingPhoto = album.related('photos').find(photo => photo.id == validData.photo_id);
+
+	//If album does not exist, abort request
+	if (!album) {
+		debug("Album to update was not found. %o", { id: album });
+		res.status(404).send({
+			status: 'fail',
+			data: 'Album Not Found',
+		});
+		return;
+	}
+
+	// If photo already exist, abort request
+	if (existingPhoto) {
+		return res.status(404).send({
+			status: 'fail',
+			data: 'Photo already exists.',
+		});
+	}
+
+	
+	// Checks that the photo or album belongs to the user
+	if (!usersAlbum || !usersPhoto) {
+		return res.status(401).send({
+			status: 'fail',
+			data: 'Album or Photo does not belong to user',
+			photo_id: validData.photo_id,
+			albumId: req.params.albumId
+		});
+	}
+
+	try {
+		const result = await usersAlbum.photos().attach(validData.photo_id);
+		debug("Added photo to Album successfully: %O", result, result.length);
+
+		res.status(200).send({
+			status: 'success',
+			data: null,
+		});
+
+	} catch (error) {
+		res.status(500).send({
+			status: 'error',
+			message: 'Exception thrown in database when adding a photo to an album.',
+		});
+		throw error;	
+}};
+
+
+
+
 
 /** 
  * 6. Delete album by ID - method
@@ -188,7 +263,6 @@ const showAlbum = async (req, res) => {
 	//get album by id
 	const usersAlbum = user.related('albums').find(album => album.id == req.params.albumId);
 
-
 	//check if album exists
 	if (!usersAlbum) {
 	  //debug('Album to update was not found. %o', { id: req.params.albumId });
@@ -200,6 +274,7 @@ const showAlbum = async (req, res) => {
 	}
   
 	  try {
+		  const detachPhotos = await usersAlbum.photos().detach();
 		  const deletedAlbum = await usersAlbum.destroy();
 		  debug('Deleted album successfully: %O', deletedAlbum);
   
@@ -224,5 +299,6 @@ module.exports = {
 	showAlbum,
 	createAlbum,
 	updateAlbum,
-	deleteAlbum
+	deleteAlbum,
+	addPhotoToAlbum,
 }
