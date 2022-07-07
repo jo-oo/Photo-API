@@ -164,6 +164,44 @@ const updatePhoto = async (req, res) => {
 	}
 }
 
+/** 
+ * 6. Delete photo by ID - method
+ *
+ * DELETE http://localhost:3000/photos/:photoId
+ */
+ const deletePhoto = async (req, res) => {
+	//get users photos
+	const user = await models.User.fetchById(req.user.user_id, { withRelated: ['photos'] });
+	
+	//get photo by id
+	const usersPhoto = user.related('photos').find(photo => photo.id == req.params.photoId);
+
+	//check if photo exists
+	if (!usersPhoto) {
+	  //debug('Photo to update was not found. %o', { id: req.params.photoId });
+	  res.status(404).send({
+		  status: 'fail',
+		  data: 'Photo not found' + req.params.photoId,
+	  });
+	  return;
+	}
+  
+	  try {
+		  const deletedPhoto = await usersPhoto.destroy();
+		  debug('Deleted photo successfully: %O', deletedPhoto);
+  
+		  res.status(200).send({
+			  status: 'success',
+			  data: null,
+		  });
+	  } catch (error) {
+		  res.status(500).send({
+			  status: 'error',
+			  message: 'Exception thrown in database when deleting photo.',
+		  });
+		  throw error;
+	  }
+  }
 
 
 
@@ -173,5 +211,6 @@ module.exports = {
 	getAllPhotos,
 	getPhotoById,
 	createPhoto,
-	updatePhoto
+	updatePhoto,
+    deletePhoto
 }
