@@ -27,7 +27,7 @@ router.put('/:albumId', albumValidationRules.updateAlbumRules, albumController.u
 
 /* 5. POST Lägg till ett foto i ett album */
 //vid anrop till adressen http://localhost:3000/albums/:albumId/photos så körs metoden POST som ligger i album_controller-filen. Metoden lagrar det som skickats in via en POST-request
-//router.post('/:albumId/photos',albumValidationRules.addPhotoToAlbumRules, albumController.postAlbum);
+router.post('/:albumId/photos',albumValidationRules.addPhotoToAlbumRules, albumController.addPhotoToAlbum);
 
 /* 6. DELETE Radera ett album */
 //vid anrop till adressen http://localhost:3000/albums/:albumId så körs metoden DELETE som ligger i album_controller-filen. Metoden lagrar det som skickats in via en DELETE-request
