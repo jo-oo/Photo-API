@@ -23,7 +23,6 @@ const createUserRules = [
         if (email) {
 			return Promise.reject("This email already exists.");
 		}
-
         //else: resolve
 		return Promise.resolve();
 	}),
@@ -36,22 +35,21 @@ const createUserRules = [
    
 ];
 
-/**
-
-* Update User validation rules
-*
-* Required: -
-* Optional: password, first_name, last_name
-*///Optional user validation rules for update of user
-/*
-const updateUserRules = [
-    body('password').optional().isString().isLength({ min: 6 }),
-    body('first_name').optional().isString().isLength({ min: 2 }),
-    body('last_name').optional().isString().isLength({ min: 2 }),
-    ];
-*/               
+ /**
+ * Login User - Validation rules
+ *
+ * Required from the new user: email, password
+ * Optional: -
+ */
+  const loginUserRules = [
+	//checks that the user typed in a email, that it is a string, is a valid email-address, and minimum 3 chars long
+    body('email').exists().isString().isEmail().isLength({ min: 3 }),
+    //checks that the user typed in a password, that it is a string and that it is at least 6 characters long
+	body('password').exists().isString().isLength({ min: 6 }), 
+];
+          
 
 module.exports = {
 	createUserRules,
-//	updateUserRules,
+    loginUserRules,
 }
