@@ -16,14 +16,16 @@ router.get('/', (req, res, next) => {
 });
 
 // register new user
-//when making a POST-request, the adreess localhost:3000/register should respond with this message
+//when making a POST-request, the address localhost:3000/register should respond with this message
 router.post('/register',
 	userValidationRules.createUserRules, //goes throught validations rules at the GET-request
 	userController.store //uses the user controller and the store method
 );
 
 //Sign in user
-router.post('/login', userController.login);
+router.post('/login', userValidationRules.loginUserRules, 
+	userController.login
+);
 
 
 //Denna lägger till en ny undermapp/path till localhost:3000 -> localhost:3000/users
