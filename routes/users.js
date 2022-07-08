@@ -18,38 +18,8 @@ router.post('/login', userController.login);
 //router.use(auth.validateJwtToken);
 
 
-/*** GET METHODS ***/
-
-/* Get all resources = GET all users */
-//1. GET from url http://localhost:3000/users  (users-pathen sätter vi i slutet av index-filen)
-router.get('/', userController.index);
-
-
-/* 2. Get a specific resource = GET Id*/
-//vid anrop till adressen http://localhost:3000/users/:Id så körs metoden show som ligger i user_controller-filen
-router.get('/:Id', userController.showUser); 
-
-
-
-
-
-
-
-// router.post('/welcome', auth, (req, res) => {
-//   res.status(200).send("Welcome 🙌 ");
-// });
-
-
-/*router.post('/users/all', function(req, res){   
-    userController.store
-  });
-*/
-
-
-
-
 /* Update a specific resource */
-//router.put('/:userId', userValidationRules.updateRules, userController.update);//vid anrop till adressen http://localhost:3000/user/userId så körs metoden update som ligger i userController-filen, Metoden uppdaterar det som skickats in via en put-request
+router.put('/:userId', userValidationRules.updateRules, userController.update);//vid anrop till adressen http://localhost:3000/user/userId så körs metoden update som ligger i userController-filen, Metoden uppdaterar det som skickats in via en put-request
 
 /* Destroy a specific resource */
 router.delete('/:userId', userController.destroy);//vid anrop till adressen http://localhost:3000/user/userId så körs metoden destroy som ligger i userController-filen, Metoden raderar det som skickats in via en delete-request
