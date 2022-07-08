@@ -24,20 +24,18 @@ const models = require('../models');
  */
  const store = async (req, res) => {
 
-	//return res.status(200).send({ status: 'ok' });
-	
-	//check for any validation errors WORKS
+	//check for any validation errors
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		return res.status(422).send({ status: 'fail', data: errors.array() });
 	}
 
-	// hämta bara den validerade datan från requesten och spara den i "validData"
+	// get only the validated data from the request and save it in "validData"
 	const validData = matchedData(req);
 
 	try {
-		//lösenordshantering: hashar validData.password och lägger på antal SaltRounds. 
-		//Sparar det hashade lösenordet i "validData.password" (som att det skrivs över med ett nytt hashat värde)
+		//password handeling: hashing validData.password and adds number of SaltRounds. 
+		//Saves the hashed password in "validData.password" (like it is overwritten by a new password)
 		validData.password = await bcrypt.hash(validData.password, 10);
 
 	} catch (error) {
@@ -48,13 +46,12 @@ const models = require('../models');
 		throw error;
 	}
 
-	// returnerar ny användare UTAN LÖSENORD och sparar
+	// returns new user WITHOUT PASSWORD and saves
 	try {
 		const user = await new models.User(validData).save();
-		debug("Created new example successfully: %O", user);
 
-		res.status(200).send({ //skickar medd 200-meddalnde när användaren hämtas ut
-			status: 'success user created',
+		res.status(200).send({
+			status: 'success',
 			data: {
 				email: validData.email,
 				first_name: validData.first_name,
@@ -73,14 +70,14 @@ const models = require('../models');
 
 
 //3.1. = LOGIN
-//Logga in en användare via email. Signera en JWT token & returnera den.
+//Log in a user through it´s email. Sign a JWT token & return it to user.
 
 const login = async (req, res) => {
 
-	//Destrukuturera email och lösenord från request bodyn
+	//Destructure email and password from the request body
 	const { email, password } = req.body;
 
-	//logga in användaren. Skicka felmeddelande om det misslyckas
+	//Log in the user. Send error message if it fails
 	const user = await models.User.login(email, password);
 	if (!user) {
 		return res.status(401).send({
@@ -89,24 +86,24 @@ const login = async (req, res) => {
 		});
 	}
 
-	//JWT Payload-innehåll:
+	//JWT Payload-content:
 	const payload = {
 		sub: user.get('email'),
 		user_id: user.get('id'),
 		name: user.get('first_name') + ' ' + user.get('last_name'),
 	};
 
-	//Signera payloaden & hämta en access-token
+	//Sign the payload & get an access-token
 	const access_token = jwt.sign(payload, 'xutld78!&/&J', {
 		expiresIn: process.env.ACCESS_TOKEN_LIFETIME || '10h',
 	});
 
-	//Signera payloaden & hämta refresh-token
+	//Sign the payload & get a refresh-token
 	const refresh_token = jwt.sign(payload, 'xutld78!&/&J', {
 		expiresIn: process.env.REFRESH_TOKEN_LIFETIME || '1w',
 	});
 
-	//Svara med access-token
+	//Answer with access-token
 	return res.send({
 		status: 'success',
 		data: {
@@ -115,72 +112,6 @@ const login = async (req, res) => {
 		},
 	});
 };
-
-//3.2. REFERSH USER
-
-
-
-
-
-//GET METHODS: EASIER METHODS BUT WILL NOT RETURN VALID DUE TO AUTHENTICATION NOW REQUIRED
-
-/** 
- * 1. Get all users - method   WORKS
- *
- * GET http://localhost:3000/users
- */ //en metod som gäller om du går direkt på controllern 
- const index = async (req, res) => {
-	const allUsers = await models.User.fetchAll();
-
-	res.send({
-		status: 'success från user controllern index som returnerar alla users',
-		data: allUsers,
-	});
-}
-
-
-/**
-* 2. Get a specific resource
-*
-* GET http://localhost:3000/users/id
-*/
-const showUser = async (req, res) => {
-	const Id = await new models.User({ id: req.params.Id }).fetch() //get Id
-	  // .fetch({withRelated: ['author', 'users']});
-		//.fetch({withRelated: ['photos', 'users']}); //to get more from the user
-
-	res.send({
-		status: 'success',
-		data: Id,
-	});
-}
-
-
-
-/**
- * Get a specific user - method
- *
- * TEST GET /:userId
-
-
-const johannasMetod = async (req, res) => {
-	//exampleId det id som skickas med i requestet example/1
-	//const userId = req.params.exampleId;
-
-	//Gör ett anrop mot databasen hämta en modell av tabellen user
-	// const user = await new models.Users({ id: userId })//använder vårt models-objekt som har metoden users. där kan vi skicka in id.
-	// 	.fetch();
-
-	res.send({ //skickas tillbaka till oss
-		status: 'johannas metod'
-		
-	});
-}
-
-
-
-
-
 
 
 
@@ -230,26 +161,12 @@ const update = async (req, res) => {
 	}
 }
 
-/**
- * Destroy a specific resource
- *
- * DELETE /:exampleId
- */
-const destroy = (req, res) => {
-	res.status(400).send({
-		status: 'fail',
-		message: 'You need to write the code for deleting this resource yourself.',
-	});
-}
+
 
 
 //Export methods
 module.exports = {
-	index,
-	showUser,
 	store, //=register
 	update,
-	destroy,
 	login
-	//johannasMetod,
 }

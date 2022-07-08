@@ -233,11 +233,80 @@ const showAlbum = async (req, res) => {
 }};
 
 
+/** 
+ * 6. Delete photo from an album - method
+ *
+ * DELETE http://localhost:3000/albums/:albumId/photos/:photoId
+ */
+/*
+ const deletePhotoFromAlbum = async (req, res) => {
+
+	getUsersSpecificAlbum();
+
+	//check if album exists
+	if (!usersAlbum) {
+
+	  res.status(404).send({
+		  status: 'fail',
+		  data: 'Album not found' + req.params.albumId,
+	  });
+	  return;
+	}
+
+	// get user and related photos
+	const userWithPhotos = await models.User.fetchById(req.user.user_id, { withRelated: ['photos'] });
+
+	//gets the photos-array from user and uses find method over that array to find specific id
+	const usersPhotos = user.related('photos').find(photo => photo.id == req.params.photoId);
+
+	// check if photo exists
+	const existing_photo = photos.find(photo => photo.id == req.params.photoId);
+
+	// if it does not exist, abort request
+	if (!existing_photo) {
+		return res.status(404).send({
+			status: 'fail',
+			data: 'Photo Not Found',
+		});
+	}
+
+	// get users album and photos relation
+	const album = await models.Album.fetchById(req.params.albumId, { withRelated: ['photos'] });
+
+	//gets the photos-array from the album and uses find method over that array to find specific id
+	const photoInAlbum = album.related('photos').find(photo => photo.id == req.params.photoId);
+
+	// if photo does not excist in album, abort
+	if (!photoInAlbum) {
+		return res.status(400).send({
+			status: 'fail',
+			data: 'Photo does not exist in album.',
+		});
+	}
 
 
+
+	try {
+		  const detachPhotos = await usersAlbum.photos().detach(req.params.photoId);
+		  
+		  debug('Deleted album successfully: %O', deletedAlbum);
+  
+		  res.status(200).send({
+			  status: 'success',
+			  data: null,
+		  });
+	  } catch (error) {
+		  res.status(500).send({
+			  status: 'error',
+			  message: 'Exception thrown in database when removing photo from album.',
+		  });
+		  throw error;
+	  }
+  }
+*/
 
 /** 
- * 6. Delete album by ID - method
+ * 7. Delete album by ID - method (incl. the links to the photos, but not the photos themselves)
  *
  * DELETE http://localhost:3000/albums/:albumId
  */
