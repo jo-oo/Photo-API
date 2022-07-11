@@ -95,7 +95,7 @@ const login = async (req, res) => {
 
 	//Sign the payload & get an access-token
 	const access_token = jwt.sign(payload, 'xutld78!&/&J', {
-		expiresIn: process.env.ACCESS_TOKEN_LIFETIME || '10h',
+		expiresIn: process.env.ACCESS_TOKEN_LIFETIME || '1h',
 	});
 
 	//Sign the payload & get a refresh-token
@@ -104,7 +104,7 @@ const login = async (req, res) => {
 	});
 
 	//Answer with access-token
-	return res.send({
+	return res.status(200).send({
 		status: 'success',
 		data: {
 			access_token,
@@ -116,7 +116,7 @@ const login = async (req, res) => {
 
 
 /**
- * Update a specific resource
+ * Update a user
  *
  * 4. PUT http://localhost:3000/users/id
  */
