@@ -11,11 +11,20 @@ const models = require('../models');
  const getAllPhotos = async (req, res) => {	
     //get users photos
 	const user = await models.User.fetchById(req.user.user_id, { withRelated: ['photos'] });
-	res.send({
-		status: 'Detta är dina bilder:',
-		data: {
-			photo: user.related('photos'), //only gets the photos-array
-		},
+
+    //get the related photos without user_id
+    const photos = user.related('photos').toJSON().map( (photo) => {
+        return {
+            id: photo.id, 
+            title: photo.title, 
+            url: photo.url, 
+            comment: photo.comment
+        };
+    } );
+
+	res.status(200).send({
+		status: 'success',
+		data: photos
 	});
 }
 
@@ -29,12 +38,19 @@ const getPhotoById = async (req, res) => {
     const user = await models.User.fetchById(req.user.user_id, { withRelated: ['photos'] });
 	//gets the photos-array from user and uses find method over that photos-array to find specific id
     //Get your specific photo by typing ex: /1 in the route (for photo with id 1)
-    const usersPhoto = user.related('photos').find(photo => photo.id == req.params.photoId);
+    const usersPhoto = user.related('photos').toJSON().map( (photo) => {
+        return {
+            id: photo.id, 
+            title: photo.title, 
+            url: photo.url, 
+            comment: photo.comment
+        };
+    }).find(photo => photo.id == req.params.photoId);
 
     //if fail
     if (!usersPhoto) {
 		return res.status(404).send({
-			status: 'failed to get photo by id /' + req.params.photoId,
+			status: 'fail',
 			message: 'Photo with this id was not found',
 		});
 	}
@@ -42,9 +58,7 @@ const getPhotoById = async (req, res) => {
     //if request suceeded, send this back to the user: 
 	res.status(200).send({
 		status: 'success',
-		data: {
-			photo: usersPhoto,
-		},
+		data: usersPhoto,
 	});
 
 }
@@ -74,7 +88,7 @@ const createPhoto = async (req, res) => {
         const newPhoto = await new models.Photo(validData).save();
 
         // Inform the user that the photo was created
-        res.status(201).send({
+        res.status(200).send({
             status: 'success',
             data: {
                 "title": validData.title,
@@ -106,13 +120,13 @@ const createPhoto = async (req, res) => {
 const updatePhoto = async (req, res) => {
   //get users photos
   const user = await models.User.fetchById(req.user.user_id, { withRelated: ['photos'] });
-  
+
   //get photo by id
   const usersPhoto = user.related('photos').find(photo => photo.id == req.params.photoId);
 
   //check if photo exists
   if (!usersPhoto) {
-    //debug('Photo to update was not found. %o', { id: req.params.photoId });
+    debug('Photo to update was not found. %o', { id: req.params.photoId });
     res.status(404).send({
         status: 'fail',
         data: 'Photo Not Found' + req.params.photoId,
