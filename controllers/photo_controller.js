@@ -62,6 +62,11 @@ const getPhotoById = async (req, res) => {
 	});
 }
 
+/** 
+ * 3. Create photo - method
+ *
+ * POST http://localhost:3000/photos/
+ */
 const createPhoto = async (req, res) => {
     //check for validation errors first
 	const errors = validationResult(req);
@@ -107,7 +112,7 @@ const createPhoto = async (req, res) => {
 }
 
 /** 
- * 3. Update photo by ID - method
+ * 4. Update photo by ID - method
  *
  * PUT http://localhost:3000/photos/:photoId
  */
@@ -122,7 +127,7 @@ const updatePhoto = async (req, res) => {
   if (!usersPhoto) {
         res.status(404).send({
             status: 'fail',
-            data: 'Photo Not Found' + req.params.photoId,
+            data: 'Photo Not Found',
         });
     return;
   }
@@ -158,7 +163,7 @@ const updatePhoto = async (req, res) => {
 }
 
 /** 
- * 6. Delete photo by ID - method
+ * 5. Delete photo by ID - method
  *
  * DELETE http://localhost:3000/photos/:photoId
  */
@@ -173,7 +178,7 @@ const updatePhoto = async (req, res) => {
 	if (!usersPhoto) {
 	    res.status(404).send({
 		    status: 'fail',
-		    data: 'Photo not found' + req.params.photoId,
+		    data: 'Photo not found',
 	    });
 	return;
 	}

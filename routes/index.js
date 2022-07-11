@@ -28,7 +28,7 @@ router.post('/login', userValidationRules.loginUserRules,
 
 //This adds a new under-folder/path till localhost:3000 -> localhost:3000/users
 //in the index-file, we tell the users-route-file to use the address: /register
-//router.use(authentication.validateJwtToken); //reads the Middleware authentication and uses that function from there: validateJwtToken
+//reads the Middleware authentication and uses that function from there: validateJwtToken
 router.use('/albums',authentication.validateJwtToken, require('./albums')); //states the route /albums to use the file: the albums route
 router.use('/photos',authentication.validateJwtToken, require('./photos'));
 module.exports = router;

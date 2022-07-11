@@ -17,7 +17,7 @@ const models = require('../models');
  */
 
 /**
- * 3. Register new User //Store a new resource
+ * 1. Register new User //Store a new resource
  *
  * POST /register  http://localhost:3000/register
  */
@@ -35,7 +35,7 @@ const models = require('../models');
 
 	try {
 		//password handeling: hashing validData.password and adds number of SaltRounds. 
-		//Saves the hashed password in "validData.password" (like it is overwritten by a new password)
+		//saves the hashed password in "validData.password" (like it is overwritten by a new password)
 		validData.password = await bcrypt.hash(validData.password, 10);
 
 	} catch (error) {
@@ -69,7 +69,7 @@ const models = require('../models');
 	}
 };
 
-//3.1. = LOGIN
+//2 = LOGIN
 //Log in a user through it´s email. Sign a JWT token & return it to user.
 
 const login = async (req, res) => {

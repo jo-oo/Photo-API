@@ -1,15 +1,11 @@
 const express = require('express');
-const { validationResult } = require('express-validator');
-const auth = require('../Middleware/authentication'); //läser in authentication där logik för Acess via JWT Token finns
 const router = express.Router();
 const albumController = require('../controllers/album_controller'); //Importerar user-controllern
-const albumValidationRules = require('../validation/album_validation_rules');//importerar validation-rules för albums
-
+const albumValidationRules = require('../validation/album_validation_rules'); //importerar validation-rules för albums
 
 /* GET all albums */
 //1. GET from url http://localhost:3000/albums (albums-pathen sätter vi i slutet av index-filen)
 router.get('/', albumController.getAllAlbums);
-
 
 /* 2. GET Id*/
 //vid anrop till adressen http://localhost:3000/albums/:albumId så körs metoden show som ligger i album_controller-filen

@@ -1,6 +1,4 @@
 const express = require('express'); //used for setting up routing
-//const { validationResult } = require('express-validator');
-//const auth = require('../Middleware/authentication'); //reads authentication where logic for acess thorugh JWT Token is
 const router = express.Router();
 //Import files:
 const photoController = require('../controllers/photo_controller');
@@ -24,7 +22,7 @@ router.post('/', photoValidationRules.createPhotoRules, photoController.createPh
 //when requests to the address http://localhost:3000/photos/:photoId is made, the method PUT, that is in the photo_controller file runs. The method saves what is sent in through a PUT-request
 router.put('/:photoId', photoValidationRules.updatePhotoRules, photoController.updatePhoto);
 
-/* 6. DELETE Delete a photo*/
+/* 5. DELETE Delete a photo*/
 //when requests to the address http://localhost:3000/photos/:photoId is made, the method DELETE, that is in the photo_controller file runs. The method saves what is sent in through a DELETE-request
 router.delete('/:photoId', photoController.deletePhoto);
 

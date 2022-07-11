@@ -2,10 +2,8 @@
  * Authentication using JWT Token
  */
 
- //const bcrypt = require('bcrypt');
- const debug = require('debug')('Photo-api:auth');
- const jwt = require('jsonwebtoken');
- //const { user_model } = require('../models');
+const debug = require('debug')('Photo-api:auth');
+const jwt = require('jsonwebtoken');
 
 /**
  * Validate JWT token

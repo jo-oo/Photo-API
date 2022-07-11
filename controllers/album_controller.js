@@ -199,7 +199,6 @@ const showAlbum = async (req, res) => {
 
 	//if album does not exist, abort request
 	if (!album) {
-		debug("Album to update was not found. %o", { id: album });
 		res.status(404).send({
 			status: 'fail',
 			data: 'Album Not Found',
@@ -241,7 +240,7 @@ const showAlbum = async (req, res) => {
 }};
 
 /** 
- * 7. Delete album by ID - method (incl. the links to the photos, but not the photos themselves)
+ * 6. Delete album by ID - method (incl. the links to the photos, but not the photos themselves)
  *
  * DELETE http://localhost:3000/albums/:albumId
  */
@@ -256,7 +255,7 @@ const deleteAlbum = async (req, res) => {
 	if (!usersAlbum) {
 	  	res.status(404).send({
 			status: 'fail',
-			data: 'Album not found' + req.params.albumId,
+			data: 'Album not found',
 	  	});
 	return;
 	}

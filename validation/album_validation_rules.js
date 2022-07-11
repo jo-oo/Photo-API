@@ -26,9 +26,6 @@ const createAlbumRules = [
         //else: resolve
 		return Promise.resolve();
 	}),
-    
-    //body('url').exists().isURL().isString(),
-    //body('comment').optional().isString().isLength({ min: 3 }),
 ];
 
 /** 
