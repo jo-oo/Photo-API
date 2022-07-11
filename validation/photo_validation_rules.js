@@ -11,25 +11,23 @@
  * POST /photos
  */
 const createPhotoRules = [
-   
 	//checks that the user typed in a title, that it is a string, and minimum 3 chars long
-    body('title').exists().isString().isLength({ min: 3 }).custom(async value => {  
-        //function that checks if title already exists in database of that User
-        const photoTitle = await new models.Photo({ title: value }).fetch({ require: false }); //refers to the model Photo
+    body('title').exists().isString().isLength({ min: 3 }).custom (async value => {  
+    //function that checks if title already exists in database of that User
+    const photoTitle = await new models.Photo({ title: value }).fetch({ require: false }); //refers to the model Photo
         
-        //if Photo exists, reject
-        if (photoTitle) {
-            return Promise.reject("This Photo Title already exists.");
-        }
-        
-        //else: resolve
-		return Promise.resolve();
-        }),
+    //if Photo exists, reject
+    if (photoTitle) {
+        return Promise.reject("This Photo Title already exists.");
+    } 
+    //else: resolve
+    return Promise.resolve();
+    }),
 
-        //checks that the user typed in a URL, that it is a string
-        body('url').exists().isURL().isString(),
-        //checks if the user typed in a comment, that it is a string and minimum 3 chars long. 
-        body('comment').optional().isString().isLength({ min: 3 })
+    //checks that the user typed in a URL, that it is a string
+    body('url').exists().isURL().isString(),
+    //checks if the user typed in a comment, that it is a string and minimum 3 chars long. 
+    body('comment').optional().isString().isLength({ min: 3 })
 ];
 
 /** 
@@ -38,7 +36,7 @@ Updates are optional, not required from user
 */
 const updatePhotoRules = [
 	//checks if the user typed in a title, that it is a string, and minimum 3 chars long
-    body('title').optional().isString().isLength({ min: 3 }),
+    body('title').exists().isString().isLength({ min: 3 }),
     //checks if the user typed in a URL, that it is a string
     body('url').optional().isURL().isString(),
     //checks if the user typed in a comment, that it is a string and minimum 3 chars long. 
