@@ -4,6 +4,7 @@ module.exports = bookshelf => {
 		'Photo', //my models name
 		{
 			tableName: 'photos', //based on table "photos"
+			hidden: ['_pivot_album_id', '_pivot_photo_id'], // hide this data in the respons
 			albums() {
 				return this.belongsToMany('Album');//creates a relation between photos table and Album-model
 			},
