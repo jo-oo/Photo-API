@@ -1,4 +1,4 @@
-// Setting up the database connection using knex
+//setting up the database connection using knex
 const knex = require('knex')({
 	debug: true,
 	client: 'mysql',
@@ -14,13 +14,13 @@ const knex = require('knex')({
 
 const bookshelf = require('bookshelf')(knex);
 
-//här lägger jag in bopokshelf-modulerna
+//adding the bookshelf-modules
 const models = {};
 models.Photo = require('./photo_model')(bookshelf);
 models.User = require('./user_model')(bookshelf);
 models.Album = require('./album_model')(bookshelf);
 
-//Export modules
+//export modules
 module.exports = {
 	bookshelf,
 	...models,

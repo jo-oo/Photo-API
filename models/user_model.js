@@ -1,23 +1,23 @@
 
 /**
  * User model. A model/ mirror of the database table User.
- * Declares it´s relations to other tables, the way it´s set up in the database. 
+ * declares it´s relations to other tables, the way it´s set up in the database. 
  * Bookshelf holds these models and how they look, in our code
 */
 
-//Bookshelf-Modell som returnerar databasens namn och tabellen user
+//Bookshelf model that returns the name of the database and the user table
 const bcrypt = require('bcrypt');
 
-//Exports the "users"" table, creates a model called "User"
+//exports the "users"" table, creates a model called "User"
 module.exports = (bookshelf) => {
 	return bookshelf.model(
-		'User', { //bookshelf skapar en modell av tabellen users (modellen kallas User)
-		tableName: 'users', // tableName = tabellen users
-		photos() {// deklarera vilken relation User har till photos i det här fallet har en User flera Photo
+		'User', { //bookshelf creates a model of the users table (the model is called User)
+		tableName: 'users', // tableName = the users table
+		photos() { //declares which relation User has to photos. In this case: a User has many Photos
 			return this.hasMany('Photo');
 		},
 		tableName: 'users',
-		albums() { // deklarera vilken relation User har till photos i det här fallet har en User flera Album
+		albums() { //declares which relation User has to albums. In this case: a User has many Albums
 			return this.hasMany('Album');
 		},
 	},
@@ -27,10 +27,10 @@ module.exports = (bookshelf) => {
 			if (!user) {
 				return false;
 			}
-			//Hämtar det hashade lösenordet från db
+			//gets the hashed password from the database
 			const hash = user.get('password');
 
-			//använd bcrypt för att jämnföra det lösenordet som skickades in (password) mot det som fanns i db (hash)
+			//use bcrypt to compare the password that was sent in (password) towards that in the database (hash)
 			const result = await bcrypt.compare(password, hash);
 			if (!result) {
 				return false;
@@ -38,8 +38,8 @@ module.exports = (bookshelf) => {
 			return user;
 		},
 
-		// fetchOptions sätts som default till ett tomt objekt 
-		//hämtar en specifik användare med dess realtion
+		//fetchOptions is set to default to an empty object
+		//gets a specific user with it´s relation
 		async fetchById(id, fetchOptions = {}) {
 			return await new this({ id }).fetch(fetchOptions);
 		},

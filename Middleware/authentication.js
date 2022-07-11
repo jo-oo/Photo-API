@@ -24,7 +24,7 @@
 	// Authorization: "Bearer eyJkpXVCJ9.eyJV9.xndmU"
 	// Split the data that we recieve in "authorization header" at our request, and split it in "authSchema + token"
 	const [authSchema, token] = req.headers.authorization.split(' ');
-    //If authSchema is NOT the same as the token we got, ??????????så
+    //If authSchema is NOT the same as the token we got, abort
 	if (authSchema.toLowerCase() !== 'bearer') { 
 		return res.status(401).send({
 			status: 'fail',
@@ -32,17 +32,16 @@
 		});
 	}
 
-	//Verify JWT Token. Use the secret access token to verify and get a refresh token to be able to get a new access token
+	//verify JWT Token. Use the secret access token to verify and get a refresh token to be able to get a new access token
 	try {
 		req.user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
-	} catch (error) {
+	} 
+	catch (error) {
 		return res.status(401).send({
 			status: 'fail',
 			data: 'Authorization failed',
 		});
 	}
-
 	//send the request further 
 	next();
 }

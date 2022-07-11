@@ -1,5 +1,4 @@
-
-//Exports the albums table, creates a model called "Album"
+//exports the albums table, creates a model called "Album"
 module.exports = bookshelf => {
 	return bookshelf.model(
 		'Album', //my models name

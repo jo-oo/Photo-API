@@ -6,8 +6,6 @@ const models = require('../models');
 const debug = require('debug')('controllers:album_controller');
 const { matchedData, validationResult } = require('express-validator');
 
-
-
 /** 
  * 1. Get all albums- method
  *
@@ -21,7 +19,6 @@ const { matchedData, validationResult } = require('express-validator');
 		data: user.related('albums'), //only gets the albums-array
 	});
 }
-
 
 /** 
  * 2. Get specific album- method
@@ -73,17 +70,17 @@ const showAlbum = async (req, res) => {
 		});
 	}
 
-    // Get the request data after it has gone through the validation and save it in ValidData
+    //get the request data after it has gone through the validation and save it in ValidData
    const validData = matchedData(req);
 	
-   // Apply the users id to the validated data, to be used when creating new photo
+   //apply the users id to the validated data, to be used when creating new photo
    	validData.user_id = req.user.user_id;
 	
     try {
-        //saves a object to the database
+        //saves a object to the data base
         const newAlbum = await new models.Album(validData).save();
 
-        // Inform the user that the album was created
+        //inform the user that the album was created
         res.status(200).send({
             status: 'success',
             data: {
@@ -96,7 +93,7 @@ const showAlbum = async (req, res) => {
         })
 
     } catch (error) {
-        // Throw an error if creating an album failed
+        //throw an error if creating an album failed
         res.status(500).send({
             status: 'Error',
             message: 'Issues when creating a new album'
@@ -104,8 +101,6 @@ const showAlbum = async (req, res) => {
         throw error;
     }
 }
-
-
 
 /** 
  * 4. Update album by ID - method
@@ -148,7 +143,7 @@ const showAlbum = async (req, res) => {
 			});
 		}
 
-	// Get the request data after it has gone through the validation and save it in ValidData
+	//get the request data after it has gone through the validation and save it in ValidData
 	const validData = matchedData(req);
 	
 	try {
@@ -164,8 +159,7 @@ const showAlbum = async (req, res) => {
 		});
 	   throw error;
 	}
-  }
-
+}
 
 /** 
  * 5. POST Add photo to an existing album - method
@@ -185,25 +179,25 @@ const showAlbum = async (req, res) => {
 		});
 	}
     
-	// Get the request data after it has gone through the validation and save it in ValidData
-   const validData = matchedData(req);
+	//get the request data after it has gone through the validation and save it in ValidData
+    const validData = matchedData(req);
 
-	// Get user and it´s relation to both albums & photos
+	//get user and it´s relation to both albums & photos
 	const user = await models.User.fetchById(req.user.user_id,{ withRelated: ['albums', 'photos'] });
 
-	// Get albums with related photos
+	//get albums with related photos
 	const album = await models.Album.fetchById(req.params.albumId, { withRelated: ['photos'] });
 
-	// Get the requested album by id
+	//get the requested album by id
 	const usersAlbum = user.related('albums').find(album => album.id == req.params.albumId);
 
-	// Get only photos belonging to the user
+	//get only photos belonging to the user
 	const usersPhoto = user.related('photos').find(photo => photo.id == validData.photo_id);
 
-	// Check if photo already exists in album
+	//check if photo already exists in album
 	const existingPhoto = album.related('photos').find(photo => photo.id == validData.photo_id);
 
-	//If album does not exist, abort request
+	//if album does not exist, abort request
 	if (!album) {
 		debug("Album to update was not found. %o", { id: album });
 		res.status(404).send({
@@ -213,16 +207,15 @@ const showAlbum = async (req, res) => {
 		return;
 	}
 
-	// If photo already exist, abort request
+	//if photo already exist, abort request
 	if (existingPhoto) {
 		return res.status(404).send({
 			status: 'fail',
 			data: 'Photo already exists.',
 		});
 	}
-
 	
-	// Checks that the photo or album belongs to the user
+	//checks that the photo or album belongs to the user
 	if (!usersAlbum || !usersPhoto) {
 		return res.status(401).send({
 			status: 'fail',
@@ -234,8 +227,6 @@ const showAlbum = async (req, res) => {
 
 	try {
 		const result = await usersAlbum.photos().attach(validData.photo_id);
-		debug("Added photo to Album successfully: %O", result, result.length);
-
 		res.status(200).send({
 			status: 'success',
 			data: null,
@@ -249,124 +240,45 @@ const showAlbum = async (req, res) => {
 		throw error;	
 }};
 
-
-/** 
- * 6. Delete photo from an album - method
- *
- * DELETE http://localhost:3000/albums/:albumId/photos/:photoId
- */
-/*
- const deletePhotoFromAlbum = async (req, res) => {
-
-	getUsersSpecificAlbum();
-
-	//check if album exists
-	if (!usersAlbum) {
-
-	  res.status(404).send({
-		  status: 'fail',
-		  data: 'Album not found' + req.params.albumId,
-	  });
-	  return;
-	}
-
-	// get user and related photos
-	const userWithPhotos = await models.User.fetchById(req.user.user_id, { withRelated: ['photos'] });
-
-	//gets the photos-array from user and uses find method over that array to find specific id
-	const usersPhotos = user.related('photos').find(photo => photo.id == req.params.photoId);
-
-	// check if photo exists
-	const existing_photo = photos.find(photo => photo.id == req.params.photoId);
-
-	// if it does not exist, abort request
-	if (!existing_photo) {
-		return res.status(404).send({
-			status: 'fail',
-			data: 'Photo Not Found',
-		});
-	}
-
-	// get users album and photos relation
-	const album = await models.Album.fetchById(req.params.albumId, { withRelated: ['photos'] });
-
-	//gets the photos-array from the album and uses find method over that array to find specific id
-	const photoInAlbum = album.related('photos').find(photo => photo.id == req.params.photoId);
-
-	// if photo does not excist in album, abort
-	if (!photoInAlbum) {
-		return res.status(400).send({
-			status: 'fail',
-			data: 'Photo does not exist in album.',
-		});
-	}
-
-
-
-	try {
-		  const detachPhotos = await usersAlbum.photos().detach(req.params.photoId);
-		  
-		  debug('Deleted album successfully: %O', deletedAlbum);
-  
-		  res.status(200).send({
-			  status: 'success',
-			  data: null,
-		  });
-	  } catch (error) {
-		  res.status(500).send({
-			  status: 'error',
-			  message: 'Exception thrown in database when removing photo from album.',
-		  });
-		  throw error;
-	  }
-  }
-*/
-
 /** 
  * 7. Delete album by ID - method (incl. the links to the photos, but not the photos themselves)
  *
  * DELETE http://localhost:3000/albums/:albumId
  */
- const deleteAlbum = async (req, res) => {
+const deleteAlbum = async (req, res) => {
 	//get users albums
 	const user = await models.User.fetchById(req.user.user_id, { withRelated: ['albums'] });
 
 	//get album by id
 	const usersAlbum = user.related('albums').find(album => album.id == req.params.albumId);
 
-
 	//check if album exists
 	if (!usersAlbum) {
-	  //debug('Album to update was not found. %o', { id: req.params.albumId });
-	  res.status(404).send({
-		  status: 'fail',
-		  data: 'Album not found' + req.params.albumId,
-	  });
-	  return;
+	  	res.status(404).send({
+			status: 'fail',
+			data: 'Album not found' + req.params.albumId,
+	  	});
+	return;
 	}
+  	try {
+		//detach photos
+		await usersAlbum.photos().detach();
+
+		//delete album
+		await usersAlbum.destroy();
   
-	  try {
-		  const detachPhotos = await usersAlbum.photos().detach();
-		  const deletedAlbum = await usersAlbum.destroy();
-		  debug('Deleted album successfully: %O', deletedAlbum);
-  
-		  res.status(200).send({
-			  status: 'success',
-			  data: null,
-		  });
-	  } catch (error) {
-		  res.status(500).send({
-			  status: 'error',
-			  message: 'Exception thrown in database when deleting album.',
-		  });
-		  throw error;
-	  }
-  }
-
-  //const addMultiplePhotosToAlbum
-
-
-
+		res.status(200).send({
+			status: 'success',
+			data: null,
+		});
+	} catch (error) {
+		res.status(500).send({
+			status: 'error',
+			message: 'Exception thrown in database when deleting album.',
+		});
+	throw error;
+	}
+}
 
 module.exports = {
 	getAllAlbums,
@@ -374,6 +286,5 @@ module.exports = {
 	createAlbum,
 	updateAlbum,
 	deleteAlbum,
-	addPhotoToAlbum,
-	//addMultiplePhotosToAlbum,
+	addPhotoToAlbum
 }

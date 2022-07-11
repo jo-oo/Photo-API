@@ -15,11 +15,9 @@ router.get('/', albumController.getAllAlbums);
 //vid anrop till adressen http://localhost:3000/albums/:albumId så körs metoden show som ligger i album_controller-filen
 router.get('/:albumId', albumController.showAlbum); 
 
-
 /* 3. STORE Spara ett nytt album */
 //vid anrop till adressen http://localhost:3000/albums/ så körs metoden STORE som ligger i album_controller-filen. Metoden lagrar det som skickats in via en POST-request
 router.post('/', albumValidationRules.createAlbumRules, albumController.createAlbum);
-
 
 /* 4. UPDATE  Uppdatera ett album */
 //vid anrop till adressen http://localhost:3000/albums/:albumId så körs metoden PUT som ligger i album_controller-filen. Metoden lagrar det som skickats in via en PUT-request
@@ -32,6 +30,5 @@ router.post('/:albumId/photos',albumValidationRules.addPhotoToAlbumRules, albumC
 /* 6. DELETE Radera ett album */
 //vid anrop till adressen http://localhost:3000/albums/:albumId så körs metoden DELETE som ligger i album_controller-filen. Metoden lagrar det som skickats in via en DELETE-request
 router.delete('/:albumId', albumController.deleteAlbum);
-
 
 module.exports = router; //exporterar router-modulen

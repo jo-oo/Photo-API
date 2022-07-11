@@ -2,14 +2,15 @@
  * Photo Validation Rules
  */
 
- const { body } = require('express-validator'); //express-validator - hjälper till att säkerställa så datan är säker, så lösenordet användaren skriver in är trimmat osv, att det är en viss längd mm. KALLAS SANITATION : att den renar datan
- const models = require('../models'); //reads the models
+//express-validator - helps to make sure the data i safe, that the password the user types in is for example; trimmed, a certain length etc.
+    //This is called Sanitization: that it cleanses the data
+const { body } = require('express-validator');
+const models = require('../models'); //reads the models
 
-
- /**
+/**
  * Create new Photo - Validation rules
  * POST /photos
- */
+*/
 const createPhotoRules = [
 	//checks that the user typed in a title, that it is a string, and minimum 3 chars long
     body('title').exists().isString().isLength({ min: 3 }).custom (async value => {  
@@ -43,8 +44,7 @@ const updatePhotoRules = [
     body('comment').optional().isString().isLength({ min: 3 })
 ];
 
-
 module.exports = {
 	createPhotoRules,
-    updatePhotoRules,
+    updatePhotoRules
 };

@@ -2,7 +2,6 @@ const { matchedData, validationResult } = require('express-validator');
 const debug = require('debug')('controllers:photo_controller');
 const models = require('../models');
 
-
 /** 
  * 1. Get all photos- method
  *
@@ -20,7 +19,7 @@ const models = require('../models');
             url: photo.url, 
             comment: photo.comment
         };
-    } );
+    });
 
 	res.status(200).send({
 		status: 'success',
@@ -36,8 +35,9 @@ const models = require('../models');
 const getPhotoById = async (req, res) => {
     //get users photos
     const user = await models.User.fetchById(req.user.user_id, { withRelated: ['photos'] });
+
 	//gets the photos-array from user and uses find method over that photos-array to find specific id
-    //Get your specific photo by typing ex: /1 in the route (for photo with id 1)
+    //get your specific photo by typing ex: /1 in the route (for photo with id 1)
     const usersPhoto = user.related('photos').toJSON().map( (photo) => {
         return {
             id: photo.id, 
@@ -60,10 +60,7 @@ const getPhotoById = async (req, res) => {
 		status: 'success',
 		data: usersPhoto,
 	});
-
 }
-
-
 
 const createPhoto = async (req, res) => {
     //check for validation errors first
@@ -77,17 +74,17 @@ const createPhoto = async (req, res) => {
         });
     }
 
-    // Get the request data after it has gone through the validation
+    //get the request data after it has gone through the validation
     const validData = matchedData(req);
 
-    // Apply the users id to the validated data, to be used when creating new photo
+    //apply the users id to the validated data, to be used when creating new photo
     validData.user_id = req.user.user_id;
 	
     try {
         //saves a object to the database
         const newPhoto = await new models.Photo(validData).save();
 
-        // Inform the user that the photo was created
+        //inform the user that the photo was created
         res.status(200).send({
             status: 'success',
             data: {
@@ -100,17 +97,14 @@ const createPhoto = async (req, res) => {
         })
 
     } catch (error) {
-        // Throw an error if creating a photo failed
+        //throw an error if creating a photo failed
         res.status(500).send({
             status: 'Error',
             message: 'Issues when creating a new photo'
         });
         throw error;
     }
-
 }
-
-
 
 /** 
  * 3. Update photo by ID - method
@@ -126,26 +120,12 @@ const updatePhoto = async (req, res) => {
 
   //check if photo exists
   if (!usersPhoto) {
-    debug('Photo to update was not found. %o', { id: req.params.photoId });
-    res.status(404).send({
-        status: 'fail',
-        data: 'Photo Not Found' + req.params.photoId,
-    });
+        res.status(404).send({
+            status: 'fail',
+            data: 'Photo Not Found' + req.params.photoId,
+        });
     return;
   }
-
-  //check that the photo belongs to the user, otherwise: reject the request
-  if (!usersPhoto) {
-   /*
-    debug('Cannot update due to photo belongs to another user. %o', {
-        id: req.params.photoId,
-    });
-    */
-    return res.status(403).send({
-        status: 'fail',
-        data: 'Not your photo!',
-    });
-   }
     
    //check for validation errors first
 	const errors = validationResult(req);
@@ -158,17 +138,16 @@ const updatePhoto = async (req, res) => {
         });
     }
 
-    // Get the request data after it has gone through the validation
+    //get the request data after it has gone through the validation
     const validData = matchedData(req);
 
 	try {
 		const updatedPhoto = await usersPhoto.save(validData);
-		debug('Updated photo successfully: %O', updatedPhoto);
-
 		res.send({
 			status: 'success',
 			data: updatedPhoto,
 		});
+
 	} catch (error) {
 		res.status(500).send({
 			status: 'error',
@@ -192,34 +171,29 @@ const updatePhoto = async (req, res) => {
 
 	//check if photo exists
 	if (!usersPhoto) {
-	  //debug('Photo to update was not found. %o', { id: req.params.photoId });
-	  res.status(404).send({
-		  status: 'fail',
-		  data: 'Photo not found' + req.params.photoId,
-	  });
-	  return;
+	    res.status(404).send({
+		    status: 'fail',
+		    data: 'Photo not found' + req.params.photoId,
+	    });
+	return;
 	}
-  
-	  try {
-          const detachAlbum = await usersPhoto.albums().detach();
-		  const deletedPhoto = await usersPhoto.destroy();
-		  debug('Deleted photo successfully: %O', deletedPhoto);
-  
-		  res.status(200).send({
-			  status: 'success',
-			  data: null,
-		  });
-	  } catch (error) {
-		  res.status(500).send({
-			  status: 'error',
-			  message: 'Exception thrown in database when deleting photo.',
-		  });
-		  throw error;
-	  }
-  }
-
-
-
+	try {
+        //detach album
+        await usersPhoto.albums().detach();
+		//delete photo
+        await usersPhoto.destroy();
+		    res.status(200).send({
+                status: 'success',
+                data: null,
+		    });
+	    } catch (error) {
+		    res.status(500).send({
+                status: 'error',
+                message: 'Exception thrown in database when deleting photo.',
+		    });
+		throw error;
+	}
+}
 
 //Export methods
 module.exports = {
