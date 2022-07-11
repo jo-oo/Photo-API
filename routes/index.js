@@ -26,6 +26,7 @@ router.post('/login', userValidationRules.loginUserRules,
 	userController.login
 );
 
+
 //This adds a new under-folder/path till localhost:3000 -> localhost:3000/users
 //in the index-file, we tell the users-route-file to use the address: /register
 //reads the Middleware authentication and uses that function from there: validateJwtToken
