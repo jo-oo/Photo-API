@@ -43,33 +43,13 @@ const updateAlbumRules = [
 * Add Photo to Album validation rules
 */
 const addPhotoToAlbumRules = [
-   
 	//checks that the user typed in a photo id, that it is an int, and 
-    body('photo_id').exists().isInt().custom(async value => {  
-        //function that checks if title already exists in database of that User
-		//const photo = await new models.Photo({ id: value }).fetch({ require: false });
-		
-//Här är en bugg, tidigare har det kollats ifall fotot existerar i databasen men det som ska kollas är ifall fotot existerar i albumet
-
-        //if Photo exists, reject
-        // if (photo) {
-		// 	return Promise.reject("This Photo already exists.");
-		// }
-
-        //else: resolve
-		return Promise.resolve();
-	}),
+    body('photo_id').exists().isInt()       
 ];
-
-
-
-
-
 
 
 module.exports = {
 	createAlbumRules,
     updateAlbumRules,
     addPhotoToAlbumRules,
-
 };

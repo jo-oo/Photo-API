@@ -47,7 +47,6 @@ const showAlbum = async (req, res) => {
 			withRelated: ['photos'],
 		});
 
-
    	 	//if request suceeded, send this back to the user: 
 		res.status(200).send({
 			status: 'success',
@@ -227,7 +226,7 @@ const showAlbum = async (req, res) => {
 	if (!usersAlbum || !usersPhoto) {
 		return res.status(401).send({
 			status: 'fail',
-			data: 'Album or Photo does not belong to user',
+			data: 'This album or photo does not exist',
 			photo_id: validData.photo_id,
 			albumId: req.params.albumId
 		});
