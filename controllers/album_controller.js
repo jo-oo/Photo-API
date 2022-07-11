@@ -7,32 +7,6 @@ const debug = require('debug')('controllers:album_controller');
 const { matchedData, validationResult } = require('express-validator');
 
 
-//Methods to be used in requests
-const getUsersSpecificAlbum = async (req, res) => {	
-	//get users albums
-	const user = await models.User.fetchById(req.user.user_id, { withRelated: ['albums'] });
-   
-   //gets the albums-array from user and uses find method over that array to find specific id
-   const usersAlbum = user.related('albums').find(album => album.id == req.params.albumId);
-}
-
-
-
-
-const validationResults = async (req, res) => {	
-	  //check for validation errors first
-	  const errors = validationResult(req);
-
-	  //if errors, show them
-	  if (!errors.isEmpty()) {
-		  return res.status(400).send({
-			  status: 'fail',
-			  data: errors.array()
-		  });
-	  }
-    // Get the request data after it has gone through the validation and save it in ValidData
-   	const validData = matchedData(req);
-}
 
 /** 
  * 1. Get all albums- method
@@ -43,10 +17,8 @@ const validationResults = async (req, res) => {
     //get users albums
 	const user = await models.User.fetchById(req.user.user_id, { withRelated: ['albums'] });
 	res.status(200).send({
-		status: 'This is your albums',
-		data: {
-			album: user.related('albums'), //only gets the albums-array
-		},
+		status: 'success',
+		data: user.related('albums'), //only gets the albums-array
 	});
 }
 
@@ -57,25 +29,31 @@ const validationResults = async (req, res) => {
  * GET http://localhost:3000/albums/albumId
  */ 
 const showAlbum = async (req, res) => {
- 
-	getUsersSpecificAlbum();
+	//get users albums
+	const user = await models.User.fetchById(req.user.user_id, { withRelated: ['albums'] });
 
+	//gets the albums-array from user and uses find method over that array to find specific id
+    const usersAlbum = user.related('albums').find(album => album.id == req.params.albumId);
+	
 		//if not found the users album
 		if(!usersAlbum){
 			res.status(404).send({
 				status: "no albums found for :" + req.params.albumId,
-				message: 'Photo with this id was not found',
+				message: 'Album with this id was not found',
 			});
 		}
 
+		const albumWithPhotos = await models.Album.fetchById(req.params.albumId, {
+			withRelated: ['photos'],
+		});
+
+
    	 	//if request suceeded, send this back to the user: 
 		res.status(200).send({
-			status: 'success' + req.params.albumId,
-			data: {
-				album: usersAlbum,
-			},
+			status: 'success',
+			data: albumWithPhotos,
 		});	
-}
+	}
 
 /** 
  * 3. Store a new album- method
@@ -85,8 +63,20 @@ const showAlbum = async (req, res) => {
    
  const createAlbum = async (req, res) => {
   
-	validationResults();
+	//check for validation errors first
+	const errors = validationResult(req);
 
+	//if errors, show them
+	if (!errors.isEmpty()) {
+		return res.status(400).send({
+			status: 'fail',
+			data: errors.array()
+		});
+	}
+
+    // Get the request data after it has gone through the validation and save it in ValidData
+   const validData = matchedData(req);
+	
    // Apply the users id to the validated data, to be used when creating new photo
    	validData.user_id = req.user.user_id;
 	
@@ -95,7 +85,7 @@ const showAlbum = async (req, res) => {
         const newAlbum = await new models.Album(validData).save();
 
         // Inform the user that the album was created
-        res.status(201).send({
+        res.status(200).send({
             status: 'success',
             data: {
                 "title": validData.title,
@@ -125,7 +115,11 @@ const showAlbum = async (req, res) => {
  */
  const updateAlbum = async (req, res) => {
 
-	getUsersSpecificAlbum();
+	//get users albums
+	const user = await models.User.fetchById(req.user.user_id, { withRelated: ['albums'] });
+
+	//get album by id
+	const usersAlbum = user.related('albums').find(album => album.id == req.params.albumId);
   
 	//check if album exists
 	if (!usersAlbum) {
@@ -144,7 +138,19 @@ const showAlbum = async (req, res) => {
 	  });
 	 }
 	  
-	validationResults();
+	//check for validation errors first
+	const errors = validationResult(req);
+
+	//if errors, show them
+		if (!errors.isEmpty()) {
+			return res.status(400).send({
+				status: 'fail',
+				data: errors.array()
+			});
+		}
+
+	// Get the request data after it has gone through the validation and save it in ValidData
+	const validData = matchedData(req);
 	
 	try {
 		const updatedAlbum = await usersAlbum.save(validData);
@@ -153,7 +159,7 @@ const showAlbum = async (req, res) => {
 			data: updatedAlbum,
 		});
 	} catch (error) {
-		  es.status(500).send({
+		  res.status(500).send({
 			status: 'error',
 			message: 'Exception thrown in database when updating a new album.',
 		});
@@ -169,7 +175,19 @@ const showAlbum = async (req, res) => {
  */
  const addPhotoToAlbum = async (req, res) => {
 	
-	validationResults();
+	//check for validation errors first
+	const errors = validationResult(req);
+
+	//if errors, show them
+	if (!errors.isEmpty()) {
+		return res.status(400).send({
+			status: 'fail',
+			data: errors.array()
+		});
+	}
+    
+	// Get the request data after it has gone through the validation and save it in ValidData
+   const validData = matchedData(req);
 
 	// Get user and it´s relation to both albums & photos
 	const user = await models.User.fetchById(req.user.user_id,{ withRelated: ['albums', 'photos'] });
@@ -311,8 +329,12 @@ const showAlbum = async (req, res) => {
  * DELETE http://localhost:3000/albums/:albumId
  */
  const deleteAlbum = async (req, res) => {
+	//get users albums
+	const user = await models.User.fetchById(req.user.user_id, { withRelated: ['albums'] });
 
-	getUsersSpecificAlbum();
+	//get album by id
+	const usersAlbum = user.related('albums').find(album => album.id == req.params.albumId);
+
 
 	//check if album exists
 	if (!usersAlbum) {
