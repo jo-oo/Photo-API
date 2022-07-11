@@ -161,9 +161,6 @@ const update = async (req, res) => {
 	}
 }
 
-
-
-
 //Export methods
 module.exports = {
 	store, //=register
