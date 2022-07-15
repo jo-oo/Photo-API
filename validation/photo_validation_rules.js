@@ -13,18 +13,7 @@ const models = require('../models'); //reads the models
 */
 const createPhotoRules = [
 	//checks that the user typed in a title, that it is a string, and minimum 3 chars long
-    body('title').exists().isString().isLength({ min: 3 }).custom (async value => {  
-    //function that checks if title already exists in database of that User
-    const photoTitle = await new models.Photo({ title: value }).fetch({ require: false }); //refers to the model Photo
-        
-    //if Photo exists, reject
-    if (photoTitle) {
-        return Promise.reject("This Photo Title already exists.");
-    } 
-    //else: resolve
-    return Promise.resolve();
-    }),
-
+    body('title').exists().isString().isLength({ min: 3 }),
     //checks that the user typed in a URL, that it is a string
     body('url').exists().isURL().isString(),
     //checks if the user typed in a comment, that it is a string and minimum 3 chars long. 
