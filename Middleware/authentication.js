@@ -15,7 +15,7 @@ const jwt = require('jsonwebtoken');
 
 		return res.status(401).send({
 			status: 'fail',
-			data: 'Authorization failed',
+			data: 'Authorization failed - Authorization header is missing in your request',
 		});
 	}
 
@@ -26,7 +26,7 @@ const jwt = require('jsonwebtoken');
 	if (authSchema.toLowerCase() !== 'bearer') { 
 		return res.status(401).send({
 			status: 'fail',
-			data: 'Authorization failed',
+			data: 'Authorization failed - AuthSchema is NOT the same as the token',
 		});
 	}
 
@@ -37,7 +37,7 @@ const jwt = require('jsonwebtoken');
 	catch (error) {
 		return res.status(401).send({
 			status: 'fail',
-			data: 'Authorization failed',
+			data: 'Authorization failed - JWT Token',
 		});
 	}
 	//send the request further 
