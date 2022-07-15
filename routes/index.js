@@ -1,7 +1,7 @@
 const express = require('express'); //used for setting up routing
 const router = express.Router();
 //reads Middleware för authentication, that handles JWT-token access authentication.
-const authentication =  require('../Middleware/authentication');
+const authentication =  require('../middleware/authentication');
 //reads User Validation Rules
 const userValidationRules = require('../validation/user_validation_rules');
 //reads User Authentication Controller
