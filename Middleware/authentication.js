@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
  * Validate JWT token
  */
  const validateJwtToken = (req, res, next) => {
-	//there must be a Authorization header added to the request, otherwise we will jump out
+	//there must be a Authorization header added to the request, otherwise we will jump out.
 	if (!req.headers.authorization) {
 		debug("Authorization header is missing in your request");
 
