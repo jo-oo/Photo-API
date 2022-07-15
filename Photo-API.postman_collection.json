@@ -2,20 +2,21 @@
 	"info": {
 		"_postman_id": "bc486676-15cb-4ee7-82ae-475a5d08886f",
 		"name": "Photo-API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14306547"
 	},
 	"item": [
 		{
 			"name": "Users",
 			"item": [
 				{
-					"name": "POST /register",
+					"name": "3. POST /register - Register a new user",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"jn@badcameraphotography.com\",\n  \"password\": \"omg-smile\",\n  \"first_name\": \"Johan\",\n  \"last_name\": \"Nordström\"\n}\n",
+							"raw": "{\n  \"email\": \"gurra@gmail.com\",\n  \"password\": \"Test123\",\n  \"first_name\": \"Elin\",\n  \"last_name\": \"Ström\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -23,33 +24,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/register",
+							"raw": "http://localhost:3000/register/",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET /users (get all users)",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:3000",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"users"
+								"register",
+								""
 							]
 						}
 					},
@@ -74,6 +57,84 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "POST /login   - Log in a user",
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"gurra@gmail.com\",\n    \"password\": \"Test123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT http://localhost:3000/user/6",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJndXJyYUBnbWFpbC5jb20iLCJ1c2VyX2lkIjoxNywibmFtZSI6IkVsaW4gU3Ryw7ZtIiwiaWF0IjoxNjU3MjcxNzA1LCJleHAiOjE2NTczMDc3MDV9.Ja8LlxBY5ZgmpmqLUU6XbdFme4F2LbwFUBgRxJtGk7g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"johan@thorner2.com\",\n    \"password\": \"omg-smile\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/user/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "test",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			]
 		},
@@ -81,8 +142,18 @@
 			"name": "Photos",
 			"item": [
 				{
-					"name": "GET /photos",
+					"name": "GET /photos - Get all photos",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbGluQGxpZGvDtnBpbmcuY29tIiwidXNlcl9pZCI6MTYsIm5hbWUiOiJFbGluIFN0csO2bSIsImlhdCI6MTY1NzE4ODMzNiwiZXhwIjoxNjU3MjI0MzM2fQ.ufV-nZ13uGajhDAaMD5SosHvAI_38aBQXtqFTCNvkew",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -98,8 +169,860 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "GET /photos/:photoId - Get a single photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXR0QGthdHQuY29tIiwidXNlcl9pZCI6MTUsIm5hbWUiOiJKb2hhbiBOb3Jkc3Ryw7ZtIiwiaWF0IjoxNjU3MDM2MTg2LCJleHAiOjE2NTcwNzIxODZ9.VmTt1hfMs_k1AdBY0ABnI_u5xYApzZKVwgkl6ltMkPY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/photos/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"photos",
+								"1"
+							]
+						},
+						"description": "Get a single photo"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /photos - Create a new photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbGluQGxpZGvDtnBpbmcuY29tIiwidXNlcl9pZCI6MTYsIm5hbWUiOiJFbGluIFN0csO2bSIsImlhdCI6MTY1NzE4ODMzNiwiZXhwIjoxNjU3MjI0MzM2fQ.ufV-nZ13uGajhDAaMD5SosHvAI_38aBQXtqFTCNvkew",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Elin\",\n  \"url\": \"https://images.unsplash.com/photo-1492684223066-81342ee5ff30\",\n  \"comment\": \"Confetti\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/photos/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"photos",
+								""
+							]
+						},
+						"description": "Create a new photo"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /photos/:photoId - Update a photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXR0QGthdHQuY29tIiwidXNlcl9pZCI6MTUsIm5hbWUiOiJKb2hhbiBOb3Jkc3Ryw7ZtIiwiaWF0IjoxNjU3MDM2MTg2LCJleHAiOjE2NTcwNzIxODZ9.VmTt1hfMs_k1AdBY0ABnI_u5xYApzZKVwgkl6ltMkPY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"When life gives you confetti, celebrate\",\n  \"comment\": \"Yolo\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/photos/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"photos",
+								"1"
+							]
+						},
+						"description": "Update a photo"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /photos/:photoId - Delete a photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJndXJyYUBnbWFpbC5jb20iLCJ1c2VyX2lkIjoxNywibmFtZSI6IkVsaW4gU3Ryw7ZtIiwiaWF0IjoxNjU3MjcxNzA1LCJleHAiOjE2NTczMDc3MDV9.Ja8LlxBY5ZgmpmqLUU6XbdFme4F2LbwFUBgRxJtGk7g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/photos/19",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"photos",
+								"19"
+							]
+						}
+					},
+					"response": []
 				}
 			]
+		},
+		{
+			"name": "Albums",
+			"item": [
+				{
+					"name": "GET /albums - Get all albums",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbGluQGxpZGvDtnBpbmcuY29tIiwidXNlcl9pZCI6MTYsIm5hbWUiOiJFbGluIFN0csO2bSIsImlhdCI6MTY1NzE4ODMzNiwiZXhwIjoxNjU3MjI0MzM2fQ.ufV-nZ13uGajhDAaMD5SosHvAI_38aBQXtqFTCNvkew",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/albums/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"albums",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /albums/:albumId - Get a single album",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXR0QGthdHQuY29tIiwidXNlcl9pZCI6MTUsIm5hbWUiOiJKb2hhbiBOb3Jkc3Ryw7ZtIiwiaWF0IjoxNjU3MTA3NzU1LCJleHAiOjE2NTcxNDM3NTV9.nJ6LzdEClG0YTfuzllISGifnmxTQqxk9gpCoiAHGUWU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/albums/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"albums",
+								"1"
+							]
+						},
+						"description": "Get a single album"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /albums - Create a new album",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbGluQGxpZGvDtnBpbmcuY29tIiwidXNlcl9pZCI6MTYsIm5hbWUiOiJFbGluIFN0csO2bSIsImlhdCI6MTY1NzE4ODMzNiwiZXhwIjoxNjU3MjI0MzM2fQ.ufV-nZ13uGajhDAaMD5SosHvAI_38aBQXtqFTCNvkew",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Elins\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/albums/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"albums",
+								""
+							]
+						},
+						"description": "Create a new album"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /albums/:albumId - Update an album",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXR0QGthdHQuY29tIiwidXNlcl9pZCI6MTUsIm5hbWUiOiJKb2hhbiBOb3Jkc3Ryw7ZtIiwiaWF0IjoxNjU3MTA3NzU1LCJleHAiOjE2NTcxNDM3NTV9.nJ6LzdEClG0YTfuzllISGifnmxTQqxk9gpCoiAHGUWU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Confetti'R'Us\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/albums/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"albums",
+								"1"
+							]
+						},
+						"description": "Update an album"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /albums/:albumId/photos -Add a photo to an album",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbGluQGxpZGvDtnBpbmcuY29tIiwidXNlcl9pZCI6MTYsIm5hbWUiOiJFbGluIFN0csO2bSIsImlhdCI6MTY1NzE4ODMzNiwiZXhwIjoxNjU3MjI0MzM2fQ.ufV-nZ13uGajhDAaMD5SosHvAI_38aBQXtqFTCNvkew",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"photo_id\": 7\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/albums/9/photos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"albums",
+								"9",
+								"photos"
+							]
+						},
+						"description": "Add a photo to an album"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /albums/:albumId/photos - Add multiple photos an album",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbGluQGxpZGvDtnBpbmcuY29tIiwidXNlcl9pZCI6MTYsIm5hbWUiOiJFbGluIFN0csO2bSIsImlhdCI6MTY1NzE4ODMzNiwiZXhwIjoxNjU3MjI0MzM2fQ.ufV-nZ13uGajhDAaMD5SosHvAI_38aBQXtqFTCNvkew",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/albums/:albumId/photos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"albums",
+								":albumId",
+								"photos"
+							],
+							"variable": [
+								{
+									"key": "albumId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /albums/:albumId - Delete an album",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbGluQGxpZGvDtnBpbmcuY29tIiwidXNlcl9pZCI6MTYsIm5hbWUiOiJFbGluIFN0csO2bSIsImlhdCI6MTY1NzE4ODMzNiwiZXhwIjoxNjU3MjI0MzM2fQ.ufV-nZ13uGajhDAaMD5SosHvAI_38aBQXtqFTCNvkew",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/albums/9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"albums",
+								"9"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Heroku",
+			"item": [
+				{
+					"name": "Users",
+					"item": [
+						{
+							"name": "Heruko register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"gustav@gmail.com\",\n  \"password\": \"Test123\",\n  \"first_name\": \"Gustav\",\n  \"last_name\": \"Gustavsson\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://cryptic-lowlands-76805.herokuapp.com/register",
+									"protocol": "https",
+									"host": [
+										"cryptic-lowlands-76805",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Heruko Login",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://cryptic-lowlands-76805.herokuapp.com/user",
+									"protocol": "https",
+									"host": [
+										"cryptic-lowlands-76805",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Photos",
+					"item": [
+						{
+							"name": "GET Heroku",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb2hhbkBnbWFpbC5jb20iLCJ1c2VyX2lkIjo0MSwibmFtZSI6IkpvaGFuIELDpGNrIiwiaWF0IjoxNjU3ODk0NTM4LCJleHAiOjE2NTc4OTgxMzh9.cNK09_0Q1WPVcwV2xv7T8FUvhQbdVsjCyydbtdXlzEk",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://cryptic-lowlands-76805.herokuapp.com/photos",
+									"protocol": "https",
+									"host": [
+										"cryptic-lowlands-76805",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"photos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT Heroku Copy",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "POST Heroku http://localhost:3000/photos/",
+									"protocol": "POST Heroku http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"photos",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "POST Heroku http://localhost:3000/photos/",
+									"protocol": "POST Heroku http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"photos",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Heroku",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbGluQGxpZGvDtnBpbmcuY29tIiwidXNlcl9pZCI6MTYsIm5hbWUiOiJFbGluIFN0csO2bSIsImlhdCI6MTY1NzE4ODMzNiwiZXhwIjoxNjU3MjI0MzM2fQ.ufV-nZ13uGajhDAaMD5SosHvAI_38aBQXtqFTCNvkew",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/photos",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"photos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST /photos  Heroku",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbGluQGxpZGvDtnBpbmcuY29tIiwidXNlcl9pZCI6MTYsIm5hbWUiOiJFbGluIFN0csO2bSIsImlhdCI6MTY1NzE4ODMzNiwiZXhwIjoxNjU3MjI0MzM2fQ.ufV-nZ13uGajhDAaMD5SosHvAI_38aBQXtqFTCNvkew",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"Elin\",\n  \"url\": \"https://images.unsplash.com/photo-1492684223066-81342ee5ff30\",\n  \"comment\": \"Confetti\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/photos/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"photos",
+										""
+									]
+								},
+								"description": "Create a new photo"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Albums",
+					"item": [
+						{
+							"name": "POST  Heroku",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjb29saW9AZ21haWwuY29tIiwidXNlcl9pZCI6NjEsIm5hbWUiOiJDb29sIENvb2xpbyIsImlhdCI6MTY1Nzg5Mjc2MCwiZXhwIjoxNjU3ODk2MzYwfQ.-BpECzQc_wIIY4aPY_poVgPxa1gpCuSRZUL88QC87_Q",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"Coolios album\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://cryptic-lowlands-76805.herokuapp.com/albums",
+									"protocol": "https",
+									"host": [
+										"cryptic-lowlands-76805",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"albums"
+									]
+								},
+								"description": "Create a new album"
+							},
+							"response": []
+						},
+						{
+							"name": "POST  Heroku Add Photot to album",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjb29saW9AZ21haWwuY29tIiwidXNlcl9pZCI6NjEsIm5hbWUiOiJDb29sIENvb2xpbyIsImlhdCI6MTY1Nzg5Mjc2MCwiZXhwIjoxNjU3ODk2MzYwfQ.-BpECzQc_wIIY4aPY_poVgPxa1gpCuSRZUL88QC87_Q",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"Coolios album\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://cryptic-lowlands-76805.herokuapp.com/albums",
+									"protocol": "https",
+									"host": [
+										"cryptic-lowlands-76805",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"albums"
+									]
+								},
+								"description": "Create a new album"
+							},
+							"response": []
+						},
+						{
+							"name": "PUT Heroku",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjb29saW9AZ21haWwuY29tIiwidXNlcl9pZCI6NjEsIm5hbWUiOiJDb29sIENvb2xpbyIsImlhdCI6MTY1Nzg5Mjc2MCwiZXhwIjoxNjU3ODk2MzYwfQ.-BpECzQc_wIIY4aPY_poVgPxa1gpCuSRZUL88QC87_Q",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"Coolios album\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://cryptic-lowlands-76805.herokuapp.com/albums",
+									"protocol": "https",
+									"host": [
+										"cryptic-lowlands-76805",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"albums"
+									]
+								},
+								"description": "Create a new album"
+							},
+							"response": []
+						},
+						{
+							"name": "GET  Heroku Get all albums",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjb29saW9AZ21haWwuY29tIiwidXNlcl9pZCI6NjEsIm5hbWUiOiJDb29sIENvb2xpbyIsImlhdCI6MTY1Nzg5Mjc2MCwiZXhwIjoxNjU3ODk2MzYwfQ.-BpECzQc_wIIY4aPY_poVgPxa1gpCuSRZUL88QC87_Q",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://cryptic-lowlands-76805.herokuapp.com/albums/",
+									"protocol": "https",
+									"host": [
+										"cryptic-lowlands-76805",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"albums",
+										""
+									]
+								},
+								"description": "Create a new album"
+							},
+							"response": []
+						},
+						{
+							"name": "GET  Heroku Get specidic album",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjb29saW9AZ21haWwuY29tIiwidXNlcl9pZCI6NjEsIm5hbWUiOiJDb29sIENvb2xpbyIsImlhdCI6MTY1Nzg5Mjc2MCwiZXhwIjoxNjU3ODk2MzYwfQ.-BpECzQc_wIIY4aPY_poVgPxa1gpCuSRZUL88QC87_Q",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://cryptic-lowlands-76805.herokuapp.com/albums/1",
+									"protocol": "https",
+									"host": [
+										"cryptic-lowlands-76805",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"albums",
+										"1"
+									]
+								},
+								"description": "Create a new album"
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://cryptic-lowlands-76805.herokuapp.com/albums/31",
+									"protocol": "https",
+									"host": [
+										"cryptic-lowlands-76805",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"albums",
+										"31"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "GET /index",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/test/:exampleId",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"test",
+						":exampleId"
+					],
+					"variable": [
+						{
+							"key": "exampleId",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
